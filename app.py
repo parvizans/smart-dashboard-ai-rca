@@ -8,7 +8,8 @@ import numpy as np
 # PAGE CONFIG
 # =========================
 st.set_page_config(layout="wide")
-st.title("🚀 Smart Dashboard (AI + RCA Engine)")
+st.title("🚀 Smart Telecom Dashboard")
+st.caption("AI-powered KPI Analysis & Root Cause Intelligence")
 
 # =========================
 # SIDEBAR
@@ -124,7 +125,7 @@ with colA:
 
     fig1.update_layout(hovermode="x unified")
 
-    st.plotly_chart(fig1, use_container_width=True)
+    st.plotly_chart(fig1, width="stretch")
 
 # =========================
 # 📊 DISTRIBUTION (RIGHT)
