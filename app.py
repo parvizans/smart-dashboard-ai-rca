@@ -27,6 +27,23 @@ if uploaded_file is None:
     st.stop()
 
 # =========================
+# CHART CONTROLS (SIDEBAR)
+# =========================
+
+trend_chart_type = st.sidebar.selectbox(
+    "📊 Trend Chart Type",
+    ["Line", "Bar", "Scatter", "Area"]
+)
+
+smooth = 1
+if trend_chart_type in ["Line", "Area"]:
+    smooth = st.sidebar.slider("Smoothing Level", 1, 20, 5)
+
+show_trend = False
+if trend_chart_type == "Scatter":
+    show_trend = st.sidebar.checkbox("📈 Add Trend Line")
+
+# =========================
 # LOAD DATA
 # =========================
 df = pd.read_csv(uploaded_file, sep=None, engine='python')
@@ -69,37 +86,23 @@ with colA:
 
     st.markdown("### Trend / Analysis")
 
-    chart_type = st.selectbox(
-        "Chart Type",
-        ["Line", "Bar", "Scatter", "Area"],
-        key="trend_chart"
-    )
-
-    smooth = 1
-    if chart_type in ["Line", "Area"]:
-        smooth = st.slider("Smoothing Level", 1, 20, 5)
-
-    show_trend = False
-    if chart_type == "Scatter":
-        show_trend = st.checkbox("📈 Add Trend Line")
-
     df_plot = df.copy()
     x_axis = np.arange(len(df_plot))
 
-    if chart_type == "Line":
+    if trend_chart_type == "Line":
         y = df_plot[kpi1].rolling(window=smooth).mean()
         fig1 = px.line(df_plot, x=x_axis, y=y)
 
-    elif chart_type == "Bar":
+    elif trend_chart_type == "Bar":
         fig1 = px.bar(df_plot, x=x_axis, y=df_plot[kpi1])
 
-    elif chart_type == "Scatter":
+    elif trend_chart_type == "Scatter":
         if show_trend:
             fig1 = px.scatter(df_plot, x=x_axis, y=kpi1, trendline="ols")
         else:
             fig1 = px.scatter(df_plot, x=x_axis, y=kpi1)
 
-    elif chart_type == "Area":
+    elif trend_chart_type == "Area":
         y = df_plot[kpi1].rolling(window=smooth).mean()
         fig1 = px.area(df_plot, x=x_axis, y=y)
 
