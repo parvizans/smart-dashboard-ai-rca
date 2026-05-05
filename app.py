@@ -148,8 +148,17 @@ with colA:
     plot_bgcolor="#020617",
     paper_bgcolor="#020617",
 
-    xaxis=dict(showgrid=False),
-    yaxis=dict(showgrid=False),
+xaxis=dict(
+    title=kpi1,
+    titlefont=dict(size=14, color="#ffffff"),
+    tickfont=dict(color="#cbd5f5")
+),
+
+yaxis=dict(
+    title=kpi2,
+    titlefont=dict(size=14, color="#ffffff"),
+    tickfont=dict(color="#cbd5f5")
+)
 
     legend=dict(
         orientation="h",
@@ -189,8 +198,18 @@ with colB:
         plot_bgcolor="#020617",
         paper_bgcolor="#020617",
         font=dict(color="white"),
-        xaxis=dict(showgrid=False, title=kpi1),
-        yaxis=dict(showgrid=False, title="Count")
+
+xaxis=dict(
+        title=kpi1,
+        titlefont=dict(size=14, color="#ffffff"),
+        tickfont=dict(color="#cbd5f5")
+),
+
+yaxis=dict(
+    title=kpi2,
+    titlefont=dict(size=14, color="#ffffff"),
+    tickfont=dict(color="#cbd5f5")
+)
     )
 
     st.plotly_chart(fig2, use_container_width=True, key="dist")
@@ -215,8 +234,18 @@ with colC:
         plot_bgcolor="#020617",
         paper_bgcolor="#020617",
         font=dict(color="white"),
-        xaxis=dict(showgrid=False),
-        yaxis=dict(showgrid=False)
+
+xaxis=dict(
+    title=kpi1,
+    titlefont=dict(size=14, color="#ffffff"),
+    tickfont=dict(color="#cbd5f5")
+),
+
+yaxis=dict(
+    title=kpi2,
+    titlefont=dict(size=14, color="#ffffff"),
+    tickfont=dict(color="#cbd5f5")
+)
     )
 
     st.plotly_chart(fig3, use_container_width=True, key="hist")
@@ -237,8 +266,18 @@ with colD:
             plot_bgcolor="#020617",
             paper_bgcolor="#020617",
             font=dict(color="white"),
-            xaxis=dict(showgrid=False),
-            yaxis=dict(showgrid=False)
+          
+xaxis=dict(
+    title=kpi1,
+    titlefont=dict(size=14, color="#ffffff"),
+    tickfont=dict(color="#cbd5f5")
+),
+
+yaxis=dict(
+    title=kpi2,
+    titlefont=dict(size=14, color="#ffffff"),
+    tickfont=dict(color="#cbd5f5")
+)
         )
 
         st.plotly_chart(fig4, use_container_width=True, key="corr")
