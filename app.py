@@ -226,7 +226,7 @@ with colB:
     elif dist_chart_type == "Donut":
         fig2 = px.pie(df, names=kpi1, hole=0.4)
 
-    fig2.update_layout(title=f"{dist_chart_type} of {kpi1}")
+    fig2.update_layout(template="plotly_dark")
 
     st.plotly_chart(fig2, width="stretch")
 
