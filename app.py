@@ -1,42 +1,48 @@
-import plotly.express as px
-import plotly.graph_objects as go
 import streamlit as st
 import pandas as pd
 import numpy as np
+import plotly.express as px
+import plotly.graph_objects as go
 
-# 🔥 DARK THEME (ADD HERE)
+# =========================
+# PAGE CONFIG
+# =========================
+st.set_page_config(layout="wide")
+
+# =========================
+# DARK THEME + UI FIX
+# =========================
 st.markdown("""
 <style>
 
+/* REMOVE HEADER */
+header[data-testid="stHeader"] {display: none;}
+
+/* REMOVE TOP GAP */
+.main {padding-top: 0rem !important;}
+
+/* BACKGROUND */
 .stApp {
     background-color: #0b1220;
     color: white;
 }
 
-/* ✅ Sidebar width + style */
+/* SIDEBAR */
 section[data-testid="stSidebar"] {
     width: 280px !important;
     background-color: #111827;
 }
 
-/* ✅ Main content spacing */
-.main .block-container {
-    padding-left: 2rem;
-    padding-right: 2rem;
-    padding-top: 1rem;
-}
-
-/* ✅ KPI cards */
+/* KPI CARDS */
 .stMetric {
     background: #1f2937;
     padding: 20px;
     border-radius: 12px;
     color: white !important;
     font-weight: bold;
-    box-shadow: 0 0 10px rgba(34, 197, 94, 0.2);
 }
 
-/* ✅ Titles */
+/* TITLES */
 h1, h2, h3 {
     color: #22c55e;
 }
@@ -45,9 +51,8 @@ h1, h2, h3 {
 """, unsafe_allow_html=True)
 
 # =========================
-# PAGE CONFIG
+# TITLE
 # =========================
-st.set_page_config(layout="wide")
 st.title("🚀 Smart Telecom Dashboard")
 st.caption("AI-powered KPI Analysis & Root Cause Intelligence")
 
@@ -79,16 +84,9 @@ st.success(f"✅ Loaded: {uploaded_file.name}")
 # =========================
 numeric_cols = df.select_dtypes(include=['number']).columns.tolist()
 
-if len(numeric_cols) == 0:
-    st.error("❌ No numeric columns found")
-    st.stop()
-
 kpi1 = st.sidebar.selectbox("📌 KPI 1", numeric_cols)
 kpi2 = st.sidebar.selectbox("📌 KPI 2 (optional)", ["None"] + numeric_cols)
 
-# =========================
-# CHART CONTROLS
-# =========================
 trend_chart_type = st.sidebar.selectbox(
     "📊 Trend Chart Type",
     ["Line", "Bar", "Scatter", "Area", "Stacked Bar", "Heatmap", "Treemap"]
@@ -128,17 +126,15 @@ st.subheader("📊 KPI Dashboard")
 colA, colB = st.columns(2)
 
 # =========================
-# 📈 TREND
+# TREND
 # =========================
 with colA:
 
     st.markdown("### Trend / Analysis")
-    st.caption(f"Primary KPI: {kpi1} | Secondary KPI: {kpi2 if kpi2 != 'None' else 'None'}")
 
     df_plot = df.copy()
     x_axis = np.arange(len(df_plot))
 
-    # ===== CHART TYPES =====
     if trend_chart_type == "Line":
         y = df_plot[kpi1].rolling(window=smooth).mean()
         fig1 = px.line(df_plot, x=x_axis, y=y, line_shape="spline")
@@ -158,35 +154,20 @@ with colA:
 
     elif trend_chart_type == "Stacked Bar":
         if kpi2 != "None":
-            fig1 = px.bar(
-                df_plot,
-                x=x_axis,
-                y=[kpi1, kpi2],
-                barmode="stack"
-            )
+            fig1 = px.bar(df_plot, x=x_axis, y=[kpi1, kpi2], barmode="stack")
         else:
             fig1 = px.bar(df_plot, x=x_axis, y=df_plot[kpi1])
 
     elif trend_chart_type == "Heatmap":
         df_plot["bin"] = pd.cut(df_plot[kpi1], bins=20)
         heat = df_plot.groupby("bin").size().reset_index(name="count")
-
-        fig1 = px.bar(
-            heat,
-            x="bin",
-            y="count"
-        )
+        fig1 = px.bar(heat, x="bin", y="count")
 
     elif trend_chart_type == "Treemap":
         df_plot["group"] = pd.qcut(df_plot[kpi1], q=5, duplicates="drop")
+        fig1 = px.treemap(df_plot, path=["group"], values=kpi1)
 
-        fig1 = px.treemap(
-            df_plot,
-            path=["group"],
-            values=kpi1
-        )
-
-    # ===== KPI2 OVERLAY (GLOBAL) =====
+    # KPI2 overlay
     if kpi2 != "None" and trend_chart_type in ["Line", "Area"]:
         fig1.add_trace(
             go.Scatter(
@@ -207,31 +188,24 @@ with colA:
             )
         )
 
-    # ===== FINAL LAYOUT (GLOBAL) =====
-    
+    # FINAL STYLE
     fig1.update_layout(
-    title=f"{trend_chart_type} Trend of {kpi1}",
-    hovermode="x unified",
-    xaxis_title="Time Index",
-    yaxis_title=kpi1,
-    template="plotly_dark",          # 🔥 ADD THIS
-    plot_bgcolor="#0b1220",          # 🔥 ADD THIS
-    paper_bgcolor="#0b1220",         # 🔥 ADD THIS
-    legend=dict(
-        title="KPIs",
-        orientation="h",
-        yanchor="bottom",
-        y=1.02,
-        xanchor="right",
-        x=1
+        title=f"{trend_chart_type} | {kpi1}" + (f" vs {kpi2}" if kpi2 != "None" else ""),
+        template="plotly_dark",
+        plot_bgcolor="#0b1220",
+        paper_bgcolor="#0b1220",
+        hovermode="x unified",
+        xaxis=dict(gridcolor="rgba(255,255,255,0.08)"),
+        yaxis=dict(gridcolor="rgba(255,255,255,0.08)")
     )
-)
+
     st.plotly_chart(fig1, width="stretch")
 
 # =========================
-# 📊 DISTRIBUTION
+# DISTRIBUTION
 # =========================
 with colB:
+
     st.markdown("### Distribution")
 
     if dist_chart_type == "Histogram":
@@ -243,68 +217,12 @@ with colB:
     elif dist_chart_type == "Donut":
         fig2 = px.pie(df, names=kpi1, hole=0.4)
 
-    fig2.update_layout(template="plotly_dark")
+    fig2.update_layout(
+        template="plotly_dark",
+        plot_bgcolor="#0b1220",
+        paper_bgcolor="#0b1220",
+        xaxis=dict(gridcolor="rgba(255,255,255,0.08)"),
+        yaxis=dict(gridcolor="rgba(255,255,255,0.08)")
+    )
 
     st.plotly_chart(fig2, width="stretch")
-
-# =========================
-# HISTOGRAM & CORRELATION
-# =========================
-colC, colD = st.columns(2)
-
-with colC:
-    st.markdown("### Histogram")
-    fig3 = px.histogram(df, x=kpi1, nbins=40)
-    st.plotly_chart(fig3, width="stretch")
-
-with colD:
-    if kpi2 != "None":
-        st.markdown("### Correlation")
-        fig4 = px.scatter(df, x=kpi1, y=kpi2)
-        st.plotly_chart(fig4, width="stretch")
-
-# =========================
-# KPI HEALTH
-# =========================
-st.subheader("🧠 KPI Health")
-
-mean_val = kpi_series.mean()
-std_val = kpi_series.std()
-
-if std_val / (mean_val + 0.001) > 0.4:
-    st.error("🔴 Degraded")
-elif std_val / (mean_val + 0.001) > 0.25:
-    st.warning("🟡 Unstable")
-else:
-    st.success("🟢 Healthy")
-
-# =========================
-# TELECOM INTELLIGENCE
-# =========================
-st.subheader("📡 Telecom Intelligence")
-
-issues = []
-actions = []
-
-if mean_val < kpi_series.max() * 0.5:
-    issues.append("Coverage issue detected")
-    actions.append("Check RSRP / coverage thresholds")
-
-if std_val > mean_val * 0.3:
-    issues.append("Mobility instability")
-    actions.append("Tune A3/A5 / neighbor relations")
-
-if kpi_series.max() > mean_val * 2:
-    issues.append("Possible congestion")
-    actions.append("Check load / PRB utilization")
-
-if issues:
-    st.error("⚠️ Issues Detected")
-    for i in issues:
-        st.write(f"• {i}")
-
-    st.warning("🛠 Recommendations")
-    for a in actions:
-        st.write(f"👉 {a}")
-else:
-    st.success("✅ Network looks stable")
