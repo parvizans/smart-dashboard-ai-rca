@@ -40,19 +40,18 @@ st.success(f"✅ Loaded: {uploaded_file.name}")
 numeric_cols = df.select_dtypes(include=['number']).columns.tolist()
 
 if len(numeric_cols) == 0:
-    st.error("❌ No numeric columns found in dataset")
+    st.error("❌ No numeric columns found")
     st.stop()
 
 kpi1 = st.sidebar.selectbox("📌 KPI 1", numeric_cols)
 kpi2 = st.sidebar.selectbox("📌 KPI 2 (optional)", ["None"] + numeric_cols)
 
 # =========================
-# CHART CONTROLS (SIDEBAR)
+# CHART CONTROLS
 # =========================
-
 trend_chart_type = st.sidebar.selectbox(
     "📊 Trend Chart Type",
-    ["Line", "Bar", "Scatter", "Area"]
+    ["Line", "Bar", "Scatter", "Area", "Stacked Bar", "Heatmap", "Treemap"]
 )
 
 dist_chart_type = st.sidebar.selectbox(
@@ -97,9 +96,11 @@ with colA:
     df_plot = df.copy()
     x_axis = np.arange(len(df_plot))
 
+    # ===== CHART TYPES =====
+
     if trend_chart_type == "Line":
         y = df_plot[kpi1].rolling(window=smooth).mean()
-        fig1 = px.line(df_plot, x=x_axis, y=y)
+        fig1 = px.line(df_plot, x=x_axis, y=y, line_shape="spline")
 
     elif trend_chart_type == "Bar":
         fig1 = px.bar(df_plot, x=x_axis, y=df_plot[kpi1])
@@ -114,15 +115,28 @@ with colA:
         y = df_plot[kpi1].rolling(window=smooth).mean()
         fig1 = px.area(df_plot, x=x_axis, y=y)
 
-    # KPI2 overlay
-    if kpi2 != "None":
+    elif trend_chart_type == "Stacked Bar":
+        if kpi2 != "None":
+            fig1 = px.bar(df_plot, x=x_axis, y=[kpi1, kpi2])
+        else:
+            fig1 = px.bar(df_plot, x=x_axis, y=kpi1)
+
+    elif trend_chart_type == "Heatmap":
+        fig1 = px.density_heatmap(df_plot, x=x_axis, y=kpi1)
+
+    elif trend_chart_type == "Treemap":
+        fig1 = px.treemap(df_plot, path=[kpi1], values=kpi1)
+
+    # ===== KPI2 OVERLAY =====
+    if kpi2 != "None" and trend_chart_type in ["Line", "Area"]:
         fig1.add_trace(
             go.Scatter(
                 x=x_axis,
                 y=df_plot[kpi2],
                 mode="lines",
                 name=kpi2,
-                yaxis="y2"
+                yaxis="y2",
+                line=dict(width=3, dash="dot")
             )
         )
 
@@ -134,9 +148,21 @@ with colA:
             )
         )
 
+    # ===== FINAL LAYOUT =====
     fig1.update_layout(
+        title=f"{trend_chart_type} Trend of {kpi1}",
         hovermode="x unified",
-        title=f"{trend_chart_type} Trend of {kpi1}"
+        xaxis_title="Time Index",
+        yaxis_title=kpi1,
+        legend=dict(
+            title="KPIs",
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1
+        ),
+        template="plotly_white"
     )
 
     st.plotly_chart(fig1, width="stretch")
