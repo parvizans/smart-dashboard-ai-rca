@@ -127,7 +127,7 @@ with colA:
     else:
         fig1 = px.bar(df_plot, x=x_axis, y=kpi1)
 
-    elif trend_chart_type == "Heatmap":
+elif trend_chart_type == "Heatmap":
          df_plot["bin"] = pd.cut(df_plot[kpi1], bins=20)
          heat = df_plot.groupby("bin").size().reset_index(name="count")
 
