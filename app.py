@@ -14,22 +14,52 @@ st.set_page_config(layout="wide")
 # =========================
 st.markdown("""
 <style>
+
+/* ===== MAIN BACKGROUND ===== */
 html, body, .stApp {
-    background-color: #0b1220;
-    color: white;
+    background: linear-gradient(180deg, #0b1220 0%, #0a0f1c 100%);
+    color: #e5e7eb;
 }
 
+/* ===== SIDEBAR ===== */
 section[data-testid="stSidebar"] {
-    background-color: #111827;
+    background: linear-gradient(180deg, #111827, #0b1220);
+    border-right: 1px solid rgba(255,255,255,0.05);
 }
 
+/* Sidebar text */
 section[data-testid="stSidebar"] * {
-    color: white !important;
+    color: #e5e7eb !important;
 }
 
-[data-testid="stMetricValue"] {
+/* ===== INPUT BOXES ===== */
+.stSelectbox div[data-baseweb="select"] {
+    background-color: #1f2937 !important;
+    border-radius: 8px;
+}
+
+.stFileUploader {
+    background-color: #1f2937 !important;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+/* Slider */
+.stSlider > div {
+    color: #4cc9f0 !important;
+}
+
+/* ===== BUTTON ===== */
+button[kind="secondary"] {
+    background: linear-gradient(90deg, #4cc9f0, #3a86ff);
     color: white !important;
-    font-size: 26px !important;
+    border-radius: 8px;
+}
+
+/* ===== KPI CARDS ===== */
+[data-testid="stMetricValue"] {
+    color: #ffffff !important;
+    font-size: 28px !important;
     font-weight: bold;
 }
 
@@ -37,12 +67,35 @@ section[data-testid="stSidebar"] * {
     color: #9ca3af !important;
 }
 
+/* ===== HEADERS ===== */
+h1, h2, h3, h4 {
+    color: #f9fafb !important;
+}
+
+/* ===== CHART CONTAINERS ===== */
+.element-container {
+    background-color: rgba(17, 24, 39, 0.6);
+    padding: 10px;
+    border-radius: 12px;
+}
+
+/* ===== REMOVE WHITE BLOCKS ===== */
+.js-plotly-plot .plotly {
+    background: transparent !important;
+}
+
+/* ===== SCROLL / WIDTH ===== */
 .block-container {
     max-width: 100% !important;
 }
+
+/* ===== KPI STATUS COLORS ===== */
+.stAlert {
+    border-radius: 10px;
+}
+
 </style>
 """, unsafe_allow_html=True)
-
 # =========================
 # TITLE
 # =========================
