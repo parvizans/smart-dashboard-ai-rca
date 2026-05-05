@@ -25,24 +25,6 @@ if st.sidebar.button("🔄 Reset"):
 if uploaded_file is None:
     st.warning("⬅️ Upload CSV to start")
     st.stop()
-    
-
-# =========================
-# CHART CONTROLS (SIDEBAR)
-# =========================
-
-trend_chart_type = st.sidebar.selectbox(
-    "📊 Trend Chart Type",
-    ["Line", "Bar", "Scatter", "Area"]
-)
-
-smooth = 1
-if trend_chart_type in ["Line", "Area"]:
-    smooth = st.sidebar.slider("Smoothing Level", 1, 20, 5)
-
-show_trend = False
-if trend_chart_type == "Scatter":
-    show_trend = st.sidebar.checkbox("📈 Add Trend Line")
 
 # =========================
 # LOAD DATA
@@ -55,10 +37,36 @@ st.success(f"✅ Loaded: {uploaded_file.name}")
 # =========================
 # KPI SELECTION
 # =========================
-
 numeric_cols = df.select_dtypes(include=['number']).columns.tolist()
+
+if len(numeric_cols) == 0:
+    st.error("❌ No numeric columns found in dataset")
+    st.stop()
+
 kpi1 = st.sidebar.selectbox("📌 KPI 1", numeric_cols)
 kpi2 = st.sidebar.selectbox("📌 KPI 2 (optional)", ["None"] + numeric_cols)
+
+# =========================
+# CHART CONTROLS (SIDEBAR)
+# =========================
+
+trend_chart_type = st.sidebar.selectbox(
+    "📊 Trend Chart Type",
+    ["Line", "Bar", "Scatter", "Area"]
+)
+
+dist_chart_type = st.sidebar.selectbox(
+    "📊 Distribution Type",
+    ["Histogram", "Pie", "Donut"]
+)
+
+smooth = 1
+if trend_chart_type in ["Line", "Area"]:
+    smooth = st.sidebar.slider("Smoothing Level", 1, 20, 5)
+
+show_trend = False
+if trend_chart_type == "Scatter":
+    show_trend = st.sidebar.checkbox("📈 Add Trend Line")
 
 # =========================
 # KPI OVERVIEW
@@ -81,10 +89,9 @@ st.subheader("📊 KPI Dashboard")
 colA, colB = st.columns(2)
 
 # =========================
-# 📈 TREND (LEFT)
+# 📈 TREND
 # =========================
 with colA:
-
     st.markdown("### Trend / Analysis")
 
     df_plot = df.copy()
@@ -127,12 +134,15 @@ with colA:
             )
         )
 
-    fig1.update_layout(hovermode="x unified")
+    fig1.update_layout(
+        hovermode="x unified",
+        title=f"{trend_chart_type} Trend of {kpi1}"
+    )
 
     st.plotly_chart(fig1, width="stretch")
 
 # =========================
-# 📊 DISTRIBUTION (RIGHT)
+# 📊 DISTRIBUTION
 # =========================
 with colB:
     st.markdown("### Distribution")
@@ -146,6 +156,8 @@ with colB:
     elif dist_chart_type == "Donut":
         fig2 = px.pie(df, names=kpi1, hole=0.4)
 
+    fig2.update_layout(title=f"{dist_chart_type} of {kpi1}")
+
     st.plotly_chart(fig2, width="stretch")
 
 # =========================
@@ -155,14 +167,14 @@ colC, colD = st.columns(2)
 
 with colC:
     st.markdown("### Histogram")
-    fig3 = px.histogram(df[kpi1], nbins=40)
-    st.plotly_chart(fig3, use_container_width=True)
+    fig3 = px.histogram(df, x=kpi1, nbins=40)
+    st.plotly_chart(fig3, width="stretch")
 
 with colD:
     if kpi2 != "None":
         st.markdown("### Correlation")
         fig4 = px.scatter(df, x=kpi1, y=kpi2)
-        st.plotly_chart(fig4, use_container_width=True)
+        st.plotly_chart(fig4, width="stretch")
 
 # =========================
 # KPI HEALTH
@@ -180,7 +192,7 @@ else:
     st.success("🟢 Healthy")
 
 # =========================
-# TELECOM INTELLIGENCE V2
+# TELECOM INTELLIGENCE
 # =========================
 st.subheader("📡 Telecom Intelligence")
 
