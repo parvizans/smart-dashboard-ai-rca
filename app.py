@@ -15,35 +15,57 @@ st.set_page_config(layout="wide")
 st.markdown("""
 <style>
 
-/* Hide top bar */
-
-/* Main background */
-.stApp {
+/* FULL PAGE FIX */
+html, body, .stApp {
+    height: 100%;
     background-color: #0b1220;
     color: white;
 }
 
-/* Sidebar */
+/* FIX SCROLL + CONTENT CUT */
+.main {
+    overflow: auto;
+}
+
+/* SIDEBAR */
 section[data-testid="stSidebar"] {
     background-color: #111827;
 }
 
-/* KPI cards */
-.stMetric {
-    background: #1f2937;
-    padding: 15px;
-    border-radius: 10px;
+/* KPI CARDS TEXT FIX */
+[data-testid="stMetricValue"] {
+    color: white !important;
+    font-size: 26px !important;
+    font-weight: bold;
+}
+
+/* KPI LABEL */
+[data-testid="stMetricLabel"] {
+    color: #9ca3af !important;
+}
+
+/* SIDEBAR TEXT */
+section[data-testid="stSidebar"] * {
     color: white !important;
 }
 
-/* Titles */
-h1, h2, h3 {
-    color: #22c55e;
+/* SIDEBAR TOGGLE ICON (>> button) */
+button[kind="header"] {
+    color: white !important;
+}
+
+/* REMOVE WHITE BLOCK BEHIND CHART */
+.block-container {
+    padding-top: 2rem;
+}
+
+/* FIX EXPAND WIDTH */
+.block-container, .stApp {
+    max-width: 100% !important;
 }
 
 </style>
 """, unsafe_allow_html=True)
-
 # =========================
 # TITLE
 # =========================
