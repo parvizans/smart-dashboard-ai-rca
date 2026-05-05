@@ -120,67 +120,80 @@ st.subheader("📊 KPI Dashboard")
 colA, colB = st.columns(2)
 
 # =========================
-# TREND (FIXED)
+# 📈 TREND
 # =========================
 with colA:
-
     st.markdown("### Trend / Analysis")
 
     df_plot = df.copy()
     x_axis = np.arange(len(df_plot))
 
-    if trend_chart_type == "Line":
-        y = df_plot[kpi1].rolling(window=smooth).mean()
-        fig1 = px.line(df_plot, x=x_axis, y=y)
+    # Normalize KPI1 (avoid flat line issue)
+    y1 = df_plot[kpi1]
 
-    elif trend_chart_type == "Bar":
-        fig1 = px.bar(df_plot, x=x_axis, y=df_plot[kpi1])
+    if trend_chart_type in ["Line", "Area"]:
+        y1 = y1.rolling(window=smooth).mean()
 
-    elif trend_chart_type == "Scatter":
-        if show_trend:
-            fig1 = px.scatter(df_plot, x=x_axis, y=kpi1, trendline="ols")
-        else:
-            fig1 = px.scatter(df_plot, x=x_axis, y=kpi1)
+    # ===== MAIN CHART =====
+    fig1 = go.Figure()
 
-    elif trend_chart_type == "Area":
-        y = df_plot[kpi1].rolling(window=smooth).mean()
-        fig1 = px.area(df_plot, x=x_axis, y=y)
+    # KPI1
+    fig1.add_trace(
+        go.Scatter(
+            x=x_axis,
+            y=y1,
+            mode="lines",
+            name=kpi1,
+            line=dict(width=3)
+        )
+    )
 
-    # KPI2 overlay (SAFE)
-    if kpi2 != "None" and trend_chart_type in ["Line", "Area"]:
+    # KPI2 (SECOND AXIS)
+    if kpi2 != "None":
         fig1.add_trace(
             go.Scatter(
                 x=x_axis,
                 y=df_plot[kpi2],
                 mode="lines",
                 name=kpi2,
-                line=dict(width=2, dash="dot")
+                yaxis="y2",
+                line=dict(width=3, dash="dot")
             )
         )
 
-    # 🔥 FIXED LAYOUT (NO CUT / NO EDGE ISSUES)
+    # ===== LAYOUT FIX (IMPORTANT) =====
     fig1.update_layout(
-        title=f"{kpi1}" + (f" vs {kpi2}" if kpi2 != "None" else ""),
+        title=f"{kpi1} vs {kpi2 if kpi2 != 'None' else ''}",
         template="plotly_dark",
         plot_bgcolor="#0b1220",
         paper_bgcolor="#0b1220",
 
-        margin=dict(l=40, r=40, t=60, b=40),   # ✅ FIX CUT
+        xaxis=dict(title="Time Index"),
+
+        yaxis=dict(
+            title=kpi1,
+            showgrid=True,
+            gridcolor="rgba(255,255,255,0.08)"
+        ),
+
+        yaxis2=dict(
+            title=kpi2,
+            overlaying="y",
+            side="right"
+        ) if kpi2 != "None" else None,
 
         legend=dict(
             orientation="h",
             yanchor="bottom",
-            y=1.05,
+            y=1.15,   # 🔥 FIX OVERLAP
             xanchor="left",
             x=0
         ),
 
-        xaxis=dict(gridcolor="rgba(255,255,255,0.05)"),
-        yaxis=dict(gridcolor="rgba(255,255,255,0.05)")
+        margin=dict(l=40, r=40, t=60, b=40)  # 🔥 FIX CROPPING
     )
 
     st.plotly_chart(fig1, use_container_width=True)
-
 # =========================
 # DISTRIBUTION (FIXED)
 # =========================
