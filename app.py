@@ -10,7 +10,7 @@ import plotly.graph_objects as go
 st.set_page_config(layout="wide")
 
 # =========================
-# DARK UI (FIXED)
+# DARK UI
 # =========================
 st.markdown("""
 <style>
@@ -77,7 +77,7 @@ st.success(f"✅ Loaded: {uploaded_file.name}")
 # =========================
 numeric_cols = df.select_dtypes(include=['number']).columns.tolist()
 
-if len(numeric_cols) == 0:
+if not numeric_cols:
     st.error("❌ No numeric columns found")
     st.stop()
 
@@ -86,7 +86,7 @@ kpi2 = st.sidebar.selectbox("📌 KPI 2 (optional)", ["None"] + numeric_cols)
 
 trend_chart_type = st.sidebar.selectbox(
     "📊 Trend Chart Type",
-    ["Line", "Bar", "Scatter", "Area", "Stacked Bar", "Heatmap"]
+    ["Line", "Bar", "Scatter", "Area"]
 )
 
 dist_chart_type = st.sidebar.selectbox(
@@ -97,10 +97,6 @@ dist_chart_type = st.sidebar.selectbox(
 smooth = 1
 if trend_chart_type in ["Line", "Area"]:
     smooth = st.sidebar.slider("Smoothing Level", 1, 20, 5)
-
-show_trend = False
-if trend_chart_type == "Scatter":
-    show_trend = st.sidebar.checkbox("📈 Add Trend Line")
 
 # =========================
 # KPI OVERVIEW
@@ -123,48 +119,67 @@ st.subheader("📊 KPI Dashboard")
 colA, colB = st.columns(2)
 
 # =========================
-# TREND
+# TREND CHART
 # =========================
 with colA:
-    st.markdown("### Trend / Analysis")
+    st.markdown("### 📈 Trend / Analysis")
 
-    df_plot = df.copy()
-    x_axis = np.arange(len(df_plot))
-
+    x_axis = np.arange(len(df))
     fig1 = go.Figure()
 
-    y1 = df_plot[kpi1]
+    y1 = df[kpi1]
     if trend_chart_type in ["Line", "Area"]:
         y1 = y1.rolling(window=smooth).mean()
 
+    # KPI1
     if trend_chart_type == "Bar":
-        fig1.add_trace(go.Bar(x=x_axis, y=y1, name=kpi1))
-
+        fig1.add_trace(go.Bar(x=x_axis, y=y1, name=kpi1, marker_color="#4cc9f0"))
     elif trend_chart_type == "Scatter":
-        fig1.add_trace(go.Scatter(x=x_axis, y=y1, mode="markers", name=kpi1))
-    elif trend_chart_type == "Heatmap":
-        fig1 = px.density_heatmap(df_plot, x=x_axis, y=kpi1)
-
+        fig1.add_trace(go.Scatter(x=x_axis, y=y1, mode="markers", name=kpi1, marker_color="#4cc9f0"))
     else:
-        fig1.add_trace(go.Scatter(x=x_axis, y=y1, mode="lines", name=kpi1))
+        fig1.add_trace(go.Scatter(x=x_axis, y=y1, mode="lines", name=kpi1,
+                                 line=dict(color="#4cc9f0", width=3)))
 
+    # KPI2
     if kpi2 != "None":
         fig1.add_trace(
             go.Scatter(
                 x=x_axis,
-                y=df_plot[kpi2],
+                y=df[kpi2],
                 mode="lines",
                 name=kpi2,
                 yaxis="y2",
-                line=dict(dash="dot")
+                line=dict(color="#f72585", width=3, dash="dot")
             )
         )
 
     fig1.update_layout(
+        title=dict(
+            text=f"{kpi1} Trend Analysis",
+            x=0.5,
+            font=dict(color="white", size=20)
+        ),
         template="plotly_dark",
         plot_bgcolor="#0b1220",
         paper_bgcolor="#0b1220",
-        yaxis2=dict(overlaying="y", side="right") if kpi2 != "None" else None,
+
+        xaxis=dict(color="#d1d5db"),
+        yaxis=dict(color="#d1d5db"),
+
+        yaxis2=dict(
+            overlaying="y",
+            side="right",
+            color="#d1d5db"
+        ) if kpi2 != "None" else None,
+
+        legend=dict(
+            orientation="h",
+            y=1.02,
+            x=0.5,
+            xanchor="center",
+            font=dict(color="white")
+        ),
+
         margin=dict(l=40, r=40, t=60, b=40)
     )
 
@@ -174,32 +189,43 @@ with colA:
 # DISTRIBUTION
 # =========================
 with colB:
-    st.markdown("### Distribution")
+    st.markdown("### 📊 Distribution")
 
     if dist_chart_type == "Histogram":
-        fig2 = px.histogram(df, x=kpi1)
+        fig2 = px.histogram(df, x=kpi1, nbins=40,
+                            color_discrete_sequence=["#4cc9f0"])
     elif dist_chart_type == "Pie":
         fig2 = px.pie(df, names=kpi1)
     else:
         fig2 = px.pie(df, names=kpi1, hole=0.4)
 
-    fig2.update_layout(template="plotly_dark")
+    fig2.update_layout(
+        template="plotly_dark",
+        plot_bgcolor="#0b1220",
+        paper_bgcolor="#0b1220",
+        font=dict(color="white")
+    )
+
     st.plotly_chart(fig2, use_container_width=True)
 
 # =========================
-# EXTRA ANALYTICS
+# EXTRA CHARTS
 # =========================
 colC, colD = st.columns(2)
 
 with colC:
     st.markdown("### Histogram")
-    fig3 = px.histogram(df, x=kpi1, nbins=40)
+    fig3 = px.histogram(df, x=kpi1, nbins=40,
+                        color_discrete_sequence=["#4cc9f0"])
+    fig3.update_layout(template="plotly_dark", font=dict(color="white"))
     st.plotly_chart(fig3, use_container_width=True)
 
 with colD:
     if kpi2 != "None":
         st.markdown("### Correlation")
-        fig4 = px.scatter(df, x=kpi1, y=kpi2)
+        fig4 = px.scatter(df, x=kpi1, y=kpi2,
+                          color_discrete_sequence=["#4cc9f0"])
+        fig4.update_layout(template="plotly_dark", font=dict(color="white"))
         st.plotly_chart(fig4, use_container_width=True)
 
 # =========================
