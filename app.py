@@ -117,8 +117,8 @@ with colA:
         fig1 = px.area(df_plot, x=x_axis, y=y)
 
     elif trend_chart_type == "Stacked Bar":
-    if kpi2 != "None":
-        fig1 = px.bar(
+        if kpi2 != "None":
+            fig1 = px.bar(
             df_plot,
             x=x_axis,
             y=[kpi1, kpi2],
