@@ -10,23 +10,27 @@ import plotly.graph_objects as go
 st.set_page_config(layout="wide")
 
 # =========================
-# DARK UI
+# FULL DARK UI (FINAL)
 # =========================
 st.markdown("""
 <style>
 
-/* ===== SIDEBAR FULL FIX ===== */
+/* ===== FULL DARK BACKGROUND ===== */
+html, body, .stApp, .main, .block-container {
+    background-color: #020617 !important;
+    color: #e2e8f0 !important;
+}
+
+/* ===== SIDEBAR ===== */
 section[data-testid="stSidebar"] {
     background: linear-gradient(180deg, #0f172a, #020617);
     border-right: 1px solid rgba(255,255,255,0.05);
 }
-
-/* Sidebar text */
 section[data-testid="stSidebar"] * {
     color: #e2e8f0 !important;
 }
 
-/* Inputs inside sidebar */
+/* ===== INPUTS ===== */
 .stSelectbox div[data-baseweb="select"],
 .stFileUploader,
 .stTextInput > div > div {
@@ -35,25 +39,31 @@ section[data-testid="stSidebar"] * {
     border: 1px solid rgba(255,255,255,0.05) !important;
 }
 
-/* Dropdown text */
-.stSelectbox span {
-    color: #e2e8f0 !important;
-}
-
-/* Slider */
-.stSlider > div {
-    color: #38bdf8 !important;
-}
-
-/* Reset button */
+/* ===== BUTTON ===== */
 button[kind="secondary"] {
     background: linear-gradient(90deg, #38bdf8, #6366f1);
     color: white !important;
     border-radius: 8px;
 }
 
+/* ===== KPI CARDS ===== */
+[data-testid="stMetricValue"] {
+    color: #ffffff !important;
+    font-size: 28px !important;
+    font-weight: bold;
+}
+[data-testid="stMetricLabel"] {
+    color: #94a3b8 !important;
+}
+
+/* ===== REMOVE WHITE FROM PLOTLY ===== */
+.js-plotly-plot .plotly {
+    background: transparent !important;
+}
+
 </style>
 """, unsafe_allow_html=True)
+
 # =========================
 # TITLE
 # =========================
@@ -130,7 +140,7 @@ st.subheader("📊 KPI Dashboard")
 colA, colB = st.columns(2)
 
 # =========================
-# TREND CHART
+# TREND
 # =========================
 with colA:
     st.markdown("### 📈 Trend / Analysis")
@@ -142,56 +152,27 @@ with colA:
     if trend_chart_type in ["Line", "Area"]:
         y1 = y1.rolling(window=smooth).mean()
 
-    # KPI1
-    if trend_chart_type == "Bar":
-        fig1.add_trace(go.Bar(x=x_axis, y=y1, name=kpi1, marker_color="#4cc9f0"))
-    elif trend_chart_type == "Scatter":
-        fig1.add_trace(go.Scatter(x=x_axis, y=y1, mode="markers", name=kpi1, marker_color="#4cc9f0"))
-    else:
-        fig1.add_trace(go.Scatter(x=x_axis, y=y1, mode="lines", name=kpi1,
-                                 line=dict(color="#4cc9f0", width=3)))
+    fig1.add_trace(go.Scatter(
+        x=x_axis, y=y1, mode="lines",
+        name=kpi1,
+        line=dict(color="#38bdf8", width=3)
+    ))
 
-    # KPI2
     if kpi2 != "None":
-        fig1.add_trace(
-            go.Scatter(
-                x=x_axis,
-                y=df[kpi2],
-                mode="lines",
-                name=kpi2,
-                yaxis="y2",
-                line=dict(color="#f72585", width=3, dash="dot")
-            )
-        )
+        fig1.add_trace(go.Scatter(
+            x=x_axis, y=df[kpi2],
+            mode="lines",
+            name=kpi2,
+            yaxis="y2",
+            line=dict(color="#f72585", width=3, dash="dot")
+        ))
 
     fig1.update_layout(
-        title=dict(
-            text=f"{kpi1} Trend Analysis",
-            x=0.5,
-            font=dict(color="white", size=20)
-        ),
         template="plotly_dark",
-        plot_bgcolor="#0b1220",
-        paper_bgcolor="#0b1220",
-
-        xaxis=dict(color="#d1d5db"),
-        yaxis=dict(color="#d1d5db"),
-
-        yaxis2=dict(
-            overlaying="y",
-            side="right",
-            color="#d1d5db"
-        ) if kpi2 != "None" else None,
-
-        legend=dict(
-            orientation="h",
-            y=1.02,
-            x=0.5,
-            xanchor="center",
-            font=dict(color="white")
-        ),
-
-        margin=dict(l=40, r=40, t=60, b=40)
+        plot_bgcolor="#020617",
+        paper_bgcolor="#020617",
+        font=dict(color="#e2e8f0"),
+        yaxis2=dict(overlaying="y", side="right") if kpi2 != "None" else None
     )
 
     st.plotly_chart(fig1, use_container_width=True)
@@ -202,19 +183,14 @@ with colA:
 with colB:
     st.markdown("### 📊 Distribution")
 
-    if dist_chart_type == "Histogram":
-        fig2 = px.histogram(df, x=kpi1, nbins=40,
-                            color_discrete_sequence=["#4cc9f0"])
-    elif dist_chart_type == "Pie":
-        fig2 = px.pie(df, names=kpi1)
-    else:
-        fig2 = px.pie(df, names=kpi1, hole=0.4)
+    fig2 = px.histogram(df, x=kpi1, nbins=40,
+                        color_discrete_sequence=["#38bdf8"])
 
     fig2.update_layout(
         template="plotly_dark",
-        plot_bgcolor="#0b1220",
-        paper_bgcolor="#0b1220",
-        font=dict(color="white")
+        plot_bgcolor="#020617",
+        paper_bgcolor="#020617",
+        font=dict(color="#e2e8f0")
     )
 
     st.plotly_chart(fig2, use_container_width=True)
@@ -227,16 +203,26 @@ colC, colD = st.columns(2)
 with colC:
     st.markdown("### Histogram")
     fig3 = px.histogram(df, x=kpi1, nbins=40,
-                        color_discrete_sequence=["#4cc9f0"])
-    fig3.update_layout(template="plotly_dark", font=dict(color="white"))
+                        color_discrete_sequence=["#38bdf8"])
+    fig3.update_layout(
+        template="plotly_dark",
+        plot_bgcolor="#020617",
+        paper_bgcolor="#020617",
+        font=dict(color="#e2e8f0")
+    )
     st.plotly_chart(fig3, use_container_width=True)
 
 with colD:
     if kpi2 != "None":
         st.markdown("### Correlation")
         fig4 = px.scatter(df, x=kpi1, y=kpi2,
-                          color_discrete_sequence=["#4cc9f0"])
-        fig4.update_layout(template="plotly_dark", font=dict(color="white"))
+                          color_discrete_sequence=["#38bdf8"])
+        fig4.update_layout(
+            template="plotly_dark",
+            plot_bgcolor="#020617",
+            paper_bgcolor="#020617",
+            font=dict(color="#e2e8f0")
+        )
         st.plotly_chart(fig4, use_container_width=True)
 
 # =========================
