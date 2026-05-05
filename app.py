@@ -128,8 +128,8 @@ with colA:
         fig1 = px.bar(df_plot, x=x_axis, y=kpi1)
 
     elif trend_chart_type == "Heatmap":
-    df_plot["bin"] = pd.cut(df_plot[kpi1], bins=20)
-    heat = df_plot.groupby("bin").size().reset_index(name="count")
+         df_plot["bin"] = pd.cut(df_plot[kpi1], bins=20)
+         heat = df_plot.groupby("bin").size().reset_index(name="count")
 
     fig1 = px.bar(
         heat,
@@ -138,7 +138,7 @@ with colA:
     )
 
    elif trend_chart_type == "Treemap":
-    df_plot["group"] = pd.qcut(df_plot[kpi1], q=5, duplicates="drop")
+       df_plot["group"] = pd.qcut(df_plot[kpi1], q=5, duplicates="drop")
 
     fig1 = px.treemap(
         df_plot,
