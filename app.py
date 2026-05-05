@@ -91,6 +91,7 @@ colA, colB = st.columns(2)
 # 📈 TREND
 # =========================
 with colA:
+
     st.markdown("### Trend / Analysis")
     st.caption(f"Primary KPI: {kpi1} | Secondary KPI: {kpi2 if kpi2 != 'None' else 'None'}")
 
@@ -98,57 +99,54 @@ with colA:
     x_axis = np.arange(len(df_plot))
 
     # ===== CHART TYPES =====
+    if trend_chart_type == "Line":
+        y = df_plot[kpi1].rolling(window=smooth).mean()
+        fig1 = px.line(df_plot, x=x_axis, y=y, line_shape="spline")
 
-# ===== CHART TYPES =====
-
-if trend_chart_type == "Line":
-    y = df_plot[kpi1].rolling(window=smooth).mean()
-    fig1 = px.line(df_plot, x=x_axis, y=y, line_shape="spline")
-
-elif trend_chart_type == "Bar":
-    fig1 = px.bar(df_plot, x=x_axis, y=df_plot[kpi1])
-
-elif trend_chart_type == "Scatter":
-    if show_trend:
-        fig1 = px.scatter(df_plot, x=x_axis, y=kpi1, trendline="ols")
-    else:
-        fig1 = px.scatter(df_plot, x=x_axis, y=kpi1)
-
-elif trend_chart_type == "Area":
-    y = df_plot[kpi1].rolling(window=smooth).mean()
-    fig1 = px.area(df_plot, x=x_axis, y=y)
-
-elif trend_chart_type == "Stacked Bar":
-    if kpi2 != "None":
-        fig1 = px.bar(
-            df_plot,
-            x=x_axis,
-            y=[kpi1, kpi2],
-            barmode="stack"
-        )
-    else:
+    elif trend_chart_type == "Bar":
         fig1 = px.bar(df_plot, x=x_axis, y=df_plot[kpi1])
 
-elif trend_chart_type == "Heatmap":
-    df_plot["bin"] = pd.cut(df_plot[kpi1], bins=20)
-    heat = df_plot.groupby("bin").size().reset_index(name="count")
+    elif trend_chart_type == "Scatter":
+        if show_trend:
+            fig1 = px.scatter(df_plot, x=x_axis, y=kpi1, trendline="ols")
+        else:
+            fig1 = px.scatter(df_plot, x=x_axis, y=kpi1)
 
-    fig1 = px.bar(
-        heat,
-        x="bin",
-        y="count"
-    )
+    elif trend_chart_type == "Area":
+        y = df_plot[kpi1].rolling(window=smooth).mean()
+        fig1 = px.area(df_plot, x=x_axis, y=y)
 
-elif trend_chart_type == "Treemap":
-    df_plot["group"] = pd.qcut(df_plot[kpi1], q=5, duplicates="drop")
+    elif trend_chart_type == "Stacked Bar":
+        if kpi2 != "None":
+            fig1 = px.bar(
+                df_plot,
+                x=x_axis,
+                y=[kpi1, kpi2],
+                barmode="stack"
+            )
+        else:
+            fig1 = px.bar(df_plot, x=x_axis, y=df_plot[kpi1])
 
-    fig1 = px.treemap(
-        df_plot,
-        path=["group"],
-        values=kpi1
-    )
+    elif trend_chart_type == "Heatmap":
+        df_plot["bin"] = pd.cut(df_plot[kpi1], bins=20)
+        heat = df_plot.groupby("bin").size().reset_index(name="count")
 
-    # ===== KPI2 OVERLAY =====
+        fig1 = px.bar(
+            heat,
+            x="bin",
+            y="count"
+        )
+
+    elif trend_chart_type == "Treemap":
+        df_plot["group"] = pd.qcut(df_plot[kpi1], q=5, duplicates="drop")
+
+        fig1 = px.treemap(
+            df_plot,
+            path=["group"],
+            values=kpi1
+        )
+
+    # ===== KPI2 OVERLAY (GLOBAL) =====
     if kpi2 != "None" and trend_chart_type in ["Line", "Area"]:
         fig1.add_trace(
             go.Scatter(
@@ -169,7 +167,7 @@ elif trend_chart_type == "Treemap":
             )
         )
 
-    # ===== FINAL LAYOUT =====
+    # ===== FINAL LAYOUT (GLOBAL) =====
     fig1.update_layout(
         title=f"{trend_chart_type} Trend of {kpi1}",
         hovermode="x unified",
