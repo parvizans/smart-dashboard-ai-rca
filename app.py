@@ -15,83 +15,41 @@ st.set_page_config(layout="wide")
 st.markdown("""
 <style>
 
-/* ===== MAIN BACKGROUND ===== */
-html, body, .stApp {
-    background: linear-gradient(180deg, #0b1220 0%, #0a0f1c 100%);
-    color: #e5e7eb;
-}
-
-/* ===== SIDEBAR ===== */
+/* ===== SIDEBAR FULL FIX ===== */
 section[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #111827, #0b1220);
+    background: linear-gradient(180deg, #0f172a, #020617);
     border-right: 1px solid rgba(255,255,255,0.05);
 }
 
 /* Sidebar text */
 section[data-testid="stSidebar"] * {
-    color: #e5e7eb !important;
+    color: #e2e8f0 !important;
 }
 
-/* ===== INPUT BOXES ===== */
-.stSelectbox div[data-baseweb="select"] {
-    background-color: #1f2937 !important;
-    border-radius: 8px;
+/* Inputs inside sidebar */
+.stSelectbox div[data-baseweb="select"],
+.stFileUploader,
+.stTextInput > div > div {
+    background-color: #1e293b !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(255,255,255,0.05) !important;
 }
 
-.stFileUploader {
-    background-color: #1f2937 !important;
-    border-radius: 10px;
-    padding: 10px;
+/* Dropdown text */
+.stSelectbox span {
+    color: #e2e8f0 !important;
 }
 
 /* Slider */
 .stSlider > div {
-    color: #4cc9f0 !important;
+    color: #38bdf8 !important;
 }
 
-/* ===== BUTTON ===== */
+/* Reset button */
 button[kind="secondary"] {
-    background: linear-gradient(90deg, #4cc9f0, #3a86ff);
+    background: linear-gradient(90deg, #38bdf8, #6366f1);
     color: white !important;
     border-radius: 8px;
-}
-
-/* ===== KPI CARDS ===== */
-[data-testid="stMetricValue"] {
-    color: #ffffff !important;
-    font-size: 28px !important;
-    font-weight: bold;
-}
-
-[data-testid="stMetricLabel"] {
-    color: #9ca3af !important;
-}
-
-/* ===== HEADERS ===== */
-h1, h2, h3, h4 {
-    color: #f9fafb !important;
-}
-
-/* ===== CHART CONTAINERS ===== */
-.element-container {
-    background-color: rgba(17, 24, 39, 0.6);
-    padding: 10px;
-    border-radius: 12px;
-}
-
-/* ===== REMOVE WHITE BLOCKS ===== */
-.js-plotly-plot .plotly {
-    background: transparent !important;
-}
-
-/* ===== SCROLL / WIDTH ===== */
-.block-container {
-    max-width: 100% !important;
-}
-
-/* ===== KPI STATUS COLORS ===== */
-.stAlert {
-    border-radius: 10px;
 }
 
 </style>
