@@ -135,58 +135,51 @@ with colA:
         ))
 
     fig1.update_layout(
-    title=dict(
-        text=f"{kpi1} vs {kpi2}" if kpi2 != "None" else f"{kpi1} Trend",
-        x=0.5,
-        y=0.92,
-        xanchor="center",
-        yanchor="top",
-        font=dict(size=20, color="#ffffff")
-    ),
+        title=dict(
+            text=f"{kpi1} vs {kpi2}" if kpi2 != "None" else f"{kpi1} Trend",
+            x=0.5,
+            y=0.92,
+            xanchor="center",
+            yanchor="top",
+            font=dict(size=20, color="#ffffff")
+        ),
+        template="plotly_dark",
+        plot_bgcolor="#020617",
+        paper_bgcolor="#020617",
 
-    template="plotly_dark",
-    plot_bgcolor="#020617",
-    paper_bgcolor="#020617",
+        xaxis=dict(
+            showgrid=False,
+            title=kpi1,
+            titlefont=dict(size=14, color="#ffffff"),
+            tickfont=dict(color="#cbd5f5")
+        ),
 
-    xaxis=dict(
-        showgrid=False,
-        title=kpi1,
-        titlefont=dict(size=14, color="#ffffff"),
-        tickfont=dict(color="#cbd5f5")
-    ),
+        yaxis=dict(
+            showgrid=False,
+            title=kpi1,
+            titlefont=dict(size=14, color="#ffffff"),
+            tickfont=dict(color="#cbd5f5")
+        ),
 
-    yaxis=dict(
-        showgrid=False,
-        title=kpi1,
-        titlefont=dict(size=14, color="#ffffff"),
-        tickfont=dict(color="#cbd5f5")
-    ),
+        legend=dict(
+            orientation="h",
+            x=0.5,
+            y=-0.2,
+            xanchor="center",
+            yanchor="top",
+            font=dict(color="#e2e8f0", size=12)
+        ),
 
-    legend=dict(
-        orientation="h",
-        x=0.5,
-        y=-0.2,
-        xanchor="center",
-        yanchor="top",
-        font=dict(color="#e2e8f0", size=12),
-        bgcolor="rgba(0,0,0,0)"
-    ),
+        margin=dict(l=40, r=40, t=80, b=80),
 
-    margin=dict(
-        l=40,
-        r=40,
-        t=80,
-        b=80
-    ),
-
-    yaxis2=dict(
-        overlaying="y",
-        side="right",
-        title=kpi2,
-        titlefont=dict(size=14, color="#ffffff"),
-        tickfont=dict(color="#cbd5f5")
-    ) if kpi2 != "None" else None
-)
+        yaxis2=dict(
+            overlaying="y",
+            side="right",
+            title=kpi2,
+            titlefont=dict(size=14, color="#ffffff"),
+            tickfont=dict(color="#cbd5f5")
+        ) if kpi2 != "None" else None
+    )
 
     st.plotly_chart(fig1, use_container_width=True, key="trend")
 
@@ -194,31 +187,27 @@ with colA:
 with colB:
     st.markdown(f"### 📊 Distribution of {kpi1}")
 
-    fig2 = px.histogram(
-        df,
-        x=kpi1,
-        nbins=40,
-        color_discrete_sequence=["#00eaff"]
+    fig2 = px.histogram(df, x=kpi1, nbins=40,
+                        color_discrete_sequence=["#00eaff"])
+
+    fig2.update_layout(
+        template="plotly_dark",
+        plot_bgcolor="#020617",
+        paper_bgcolor="#020617",
+        font=dict(color="white"),
+
+        xaxis=dict(
+            title=kpi1,
+            titlefont=dict(size=14, color="#ffffff"),
+            tickfont=dict(color="#cbd5f5")
+        ),
+
+        yaxis=dict(
+            title="Count",
+            titlefont=dict(size=14, color="#ffffff"),
+            tickfont=dict(color="#cbd5f5")
+        )
     )
-
-    fig.update_layout(
-    template="plotly_dark",
-    plot_bgcolor="#020617",
-    paper_bgcolor="#020617",
-    font=dict(color="white"),
-
-    xaxis=dict(
-        title=kpi1,
-        titlefont=dict(size=14, color="#ffffff"),
-        tickfont=dict(color="#cbd5f5")
-    ),
-
-    yaxis=dict(
-        title="Count",
-        titlefont=dict(size=14, color="#ffffff"),
-        tickfont=dict(color="#cbd5f5")
-    )
-)
 
     st.plotly_chart(fig2, use_container_width=True, key="dist")
 
@@ -230,31 +219,27 @@ colC, colD = st.columns(2)
 with colC:
     st.markdown(f"### 📊 Histogram of {kpi1}")
 
-    fig3 = px.histogram(
-        df,
-        x=kpi1,
-        nbins=40,
-        color_discrete_sequence=["#00eaff"]
+    fig3 = px.histogram(df, x=kpi1, nbins=40,
+                        color_discrete_sequence=["#00eaff"])
+
+    fig3.update_layout(
+        template="plotly_dark",
+        plot_bgcolor="#020617",
+        paper_bgcolor="#020617",
+        font=dict(color="white"),
+
+        xaxis=dict(
+            title=kpi1,
+            titlefont=dict(size=14, color="#ffffff"),
+            tickfont=dict(color="#cbd5f5")
+        ),
+
+        yaxis=dict(
+            title="Count",
+            titlefont=dict(size=14, color="#ffffff"),
+            tickfont=dict(color="#cbd5f5")
+        )
     )
-
-    fig.update_layout(
-    template="plotly_dark",
-    plot_bgcolor="#020617",
-    paper_bgcolor="#020617",
-    font=dict(color="white"),
-
-    xaxis=dict(
-        title=kpi1,
-        titlefont=dict(size=14, color="#ffffff"),
-        tickfont=dict(color="#cbd5f5")
-    ),
-
-    yaxis=dict(
-        title="Count",
-        titlefont=dict(size=14, color="#ffffff"),
-        tickfont=dict(color="#cbd5f5")
-    )
-)
 
     st.plotly_chart(fig3, use_container_width=True, key="hist")
 
@@ -262,31 +247,27 @@ with colD:
     if kpi2 != "None":
         st.markdown(f"### 🔗 Correlation: {kpi1} vs {kpi2}")
 
-        fig4 = px.scatter(
-            df,
-            x=kpi1,
-            y=kpi2,
-            color_discrete_sequence=["#00eaff"]
+        fig4 = px.scatter(df, x=kpi1, y=kpi2,
+                          color_discrete_sequence=["#00eaff"])
+
+        fig4.update_layout(
+            template="plotly_dark",
+            plot_bgcolor="#020617",
+            paper_bgcolor="#020617",
+            font=dict(color="white"),
+
+            xaxis=dict(
+                title=kpi1,
+                titlefont=dict(size=14, color="#ffffff"),
+                tickfont=dict(color="#cbd5f5")
+            ),
+
+            yaxis=dict(
+                title=kpi2,
+                titlefont=dict(size=14, color="#ffffff"),
+                tickfont=dict(color="#cbd5f5")
+            )
         )
-
-        fig.update_layout(
-    template="plotly_dark",
-    plot_bgcolor="#020617",
-    paper_bgcolor="#020617",
-    font=dict(color="white"),
-
-    xaxis=dict(
-        title=kpi1,
-        titlefont=dict(size=14, color="#ffffff"),
-        tickfont=dict(color="#cbd5f5")
-    ),
-
-    yaxis=dict(
-        title="Count",
-        titlefont=dict(size=14, color="#ffffff"),
-        tickfont=dict(color="#cbd5f5")
-    )
-)
 
         st.plotly_chart(fig4, use_container_width=True, key="corr")
 
