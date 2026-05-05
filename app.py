@@ -135,24 +135,41 @@ with colA:
         ))
 
     fig1.update_layout(
-        title=dict(
-            text=f"{kpi1} vs {kpi2}" if kpi2 != "None" else f"{kpi1} Trend",
-            x=0.45,
-            font=dict(color="white")
-        ),
-        template="plotly_dark",
-        plot_bgcolor="#020617",
-        paper_bgcolor="#020617",
-        xaxis=dict(showgrid=False),
-        yaxis=dict(showgrid=False),
-        legend=dict(
-            orientation="h",
-            y=1.15,
-            x=0.01,
-            font=dict(color="#e2e8f0")
-        ),
-        yaxis2=dict(overlaying="y", side="right") if kpi2 != "None" else None
-    )
+    title=dict(
+        text=f"{kpi1} vs {kpi2}" if kpi2 != "None" else f"{kpi1} Trend",
+        x=0.5,                 # ✅ PERFECT CENTER
+        y=0.92,                # ✅ slightly lower (inside chart nicely)
+        xanchor="center",
+        yanchor="top",
+        font=dict(size=20, color="#ffffff")
+    ),
+
+    template="plotly_dark",
+    plot_bgcolor="#020617",
+    paper_bgcolor="#020617",
+
+    xaxis=dict(showgrid=False),
+    yaxis=dict(showgrid=False),
+
+    legend=dict(
+        orientation="h",
+        x=0.5,                 # ✅ center horizontally
+        y=-0.2,                # ✅ move BELOW chart
+        xanchor="center",
+        yanchor="top",
+        font=dict(color="#e2e8f0", size=12),
+        bgcolor="rgba(0,0,0,0)"  # transparent
+    ),
+
+    margin=dict(
+        l=40,
+        r=40,
+        t=80,
+        b=80   # ✅ IMPORTANT → space for legend
+    ),
+
+    yaxis2=dict(overlaying="y", side="right") if kpi2 != "None" else None
+)
 
     st.plotly_chart(fig1, use_container_width=True, key="trend")
 
