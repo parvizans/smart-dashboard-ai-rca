@@ -4,6 +4,30 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
+# 🔥 DARK THEME (ADD HERE)
+st.markdown("""
+<style>
+    .stApp {
+        background-color: #0b1220;
+        color: white;
+    }
+
+    section[data-testid="stSidebar"] {
+        background-color: #111827;
+    }
+
+    .stMetric {
+        background: #1f2937;
+        padding: 15px;
+        border-radius: 10px;
+    }
+
+    h1, h2, h3 {
+        color: #22c55e;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 # =========================
 # PAGE CONFIG
 # =========================
@@ -168,21 +192,22 @@ with colA:
         )
 
     # ===== FINAL LAYOUT (GLOBAL) =====
+    
     fig1.update_layout(
-        title=f"{trend_chart_type} Trend of {kpi1}",
-        hovermode="x unified",
-        xaxis_title="Time Index",
-        yaxis_title=kpi1,
-        legend=dict(
-            title="KPIs",
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=1
-        ),
-        template="plotly_white"
+    title=f"{trend_chart_type} Trend of {kpi1}",
+    hovermode="x unified",
+    template="plotly_dark",   # 🔥 ADD THIS LINE
+    xaxis_title="Time Index",
+    yaxis_title=kpi1,
+    legend=dict(
+        title="KPIs",
+        orientation="h",
+        yanchor="bottom",
+        y=1.02,
+        xanchor="right",
+        x=1
     )
+)
 
     st.plotly_chart(fig1, width="stretch")
 
