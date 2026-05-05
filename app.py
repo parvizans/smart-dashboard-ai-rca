@@ -16,7 +16,6 @@ st.markdown("""
 <style>
 
 /* Hide top bar */
-header[data-testid="stHeader"] {display:none;}
 
 /* Main background */
 .stApp {
