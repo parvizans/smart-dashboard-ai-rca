@@ -123,6 +123,8 @@ with colA:
         name=kpi1,
         line=dict(color="#00eaff", width=3)   # main line
 
+    ))
+
     if kpi2 != "None":
         fig1.add_trace(go.Scatter(
             x=x_axis,
