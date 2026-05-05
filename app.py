@@ -51,6 +51,11 @@ section[data-testid="stSidebar"] * {
 .js-plotly-plot .plotly {
     background: transparent !important;
 }
+section[data-testid="stSidebar"] .stSelectbox,
+section[data-testid="stSidebar"] .stSlider,
+section[data-testid="stSidebar"] .stFileUploader {
+    color: #ffffff !important;
+}
 
 </style>
 """, unsafe_allow_html=True)
@@ -116,8 +121,7 @@ with colA:
         y=df[kpi1],
         mode="lines",
         name=kpi1,
-        line=dict(color="#00e5ff", width=3)
-    ))
+        line=dict(color="#00eaff", width=3)   # main line
 
     if kpi2 != "None":
         fig1.add_trace(go.Scatter(
@@ -126,32 +130,35 @@ with colA:
             mode="lines",
             name=kpi2,
             yaxis="y2",
-            line=dict(color="#ff2d95", width=3, dash="dot")
+            line=dict(color="#ff2da3", width=3, dash="dot")  # second KPI
         ))
 
     fig1.update_layout(
-        title=dict(
-            text=f"{kpi1} vs {kpi2}" if kpi2 != "None" else f"{kpi1} Trend",
-            x=0.5,
-            font=dict(color="white")
-        ),
-        template="plotly_dark",
-        plot_bgcolor="#020617",
-        paper_bgcolor="#020617",
-        legend=dict(
-            font=dict(color="white"),
-            orientation="h",
-            x=0.5,
-            xanchor="center"
-        ),
-        yaxis2=dict(overlaying="y", side="right") if kpi2 != "None" else None
-    )
+    title=dict(
+        text=f"{kpi1} vs {kpi2}" if kpi2 != "None" else f"{kpi1} Trend",
+        x=0.45,   # 👈 slightly left (your request)
+        font=dict(size=20, color="#ffffff")
+    ),
 
+    template="plotly_dark",
+    plot_bgcolor="#020617",
+    paper_bgcolor="#020617",
+
+    legend=dict(
+        font=dict(color="#ffffff"),
+        orientation="h",
+        x=0.45,   # 👈 move left (important fix)
+        xanchor="center",
+        y=1.05
+    ),
+
+    yaxis2=dict(overlaying="y", side="right") if kpi2 != "None" else None
+)
     st.plotly_chart(fig1, use_container_width=True, key="trend")
 
 # ===== DISTRIBUTION =====
 with colB:
-    st.markdown("### 📊 Distribution")
+    st.markdown(f"### 📊 Distribution of {kpi1}")
 
     fig2 = px.histogram(df, x=kpi1, nbins=40,
                         color_discrete_sequence=["#00e5ff"])
@@ -171,7 +178,7 @@ with colB:
 colC, colD = st.columns(2)
 
 with colC:
-    st.markdown("### 📊 Histogram")
+    st.markdown(f"### 📊 Histogram of {kpi1}")
 
     fig3 = px.histogram(df, x=kpi1, nbins=40,
                         color_discrete_sequence=["#00e5ff"])
@@ -187,8 +194,7 @@ with colC:
 
 with colD:
     if kpi2 != "None":
-        st.markdown(f"### 🔗 Correlation ({kpi1} vs {kpi2})")
-
+       st.markdown(f"### 🔗 Correlation: {kpi1} vs {kpi2}")
         fig4 = px.scatter(df, x=kpi1, y=kpi2,
                           color_discrete_sequence=["#00e5ff"])
 
