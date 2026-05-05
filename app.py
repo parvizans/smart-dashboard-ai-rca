@@ -175,7 +175,7 @@ with colA:
         yaxis2=dict(overlaying="y", side="right") if kpi2 != "None" else None
     )
 
-    st.plotly_chart(fig1, use_container_width=True)
+    st.plotly_chart(fig1, use_container_width=True, key="trend_chart")
 
 # =========================
 # DISTRIBUTION
@@ -193,7 +193,7 @@ with colB:
         font=dict(color="#e2e8f0")
     )
 
-    st.plotly_chart(fig2, use_container_width=True)
+    st.plotly_chart(fig2, use_container_width=True, key="distribution_chart")
 
 # =========================
 # EXTRA CHARTS
@@ -210,7 +210,7 @@ with colC:
         paper_bgcolor="#020617",
         font=dict(color="#e2e8f0")
     )
-    st.plotly_chart(fig3, use_container_width=True)
+    st.plotly_chart(fig3, use_container_width=True, key="histogram_chart")
 
 with colD:
     if kpi2 != "None":
@@ -223,7 +223,7 @@ with colD:
             paper_bgcolor="#020617",
             font=dict(color="#e2e8f0")
         )
-        st.plotly_chart(fig4, use_container_width=True)
+        st.plotly_chart(fig4, use_container_width=True, key="correlation_chart")
 
 # =========================
 # KPI HEALTH
