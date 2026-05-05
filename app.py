@@ -25,6 +25,7 @@ if st.sidebar.button("🔄 Reset"):
 if uploaded_file is None:
     st.warning("⬅️ Upload CSV to start")
     st.stop()
+    
 
 # =========================
 # CHART CONTROLS (SIDEBAR)
@@ -54,10 +55,10 @@ st.success(f"✅ Loaded: {uploaded_file.name}")
 # =========================
 # KPI SELECTION
 # =========================
-numeric_cols = df.select_dtypes(include=['number']).columns.tolist()
 
-kpi1 = st.selectbox("KPI 1", numeric_cols)
-kpi2 = st.selectbox("KPI 2 (optional)", ["None"] + numeric_cols)
+numeric_cols = df.select_dtypes(include=['number']).columns.tolist()
+kpi1 = st.sidebar.selectbox("📌 KPI 1", numeric_cols)
+kpi2 = st.sidebar.selectbox("📌 KPI 2 (optional)", ["None"] + numeric_cols)
 
 # =========================
 # KPI OVERVIEW
@@ -134,22 +135,18 @@ with colA:
 # 📊 DISTRIBUTION (RIGHT)
 # =========================
 with colB:
-
     st.markdown("### Distribution")
 
-    dist_type = st.selectbox(
-        "Distribution Type",
-        ["Histogram", "Box", "Violin"]
-    )
-
-    if dist_type == "Histogram":
+    if dist_chart_type == "Histogram":
         fig2 = px.histogram(df, x=kpi1)
-    elif dist_type == "Box":
-        fig2 = px.box(df, y=kpi1)
-    elif dist_type == "Violin":
-        fig2 = px.violin(df, y=kpi1, box=True)
 
-    st.plotly_chart(fig2, use_container_width=True)
+    elif dist_chart_type == "Pie":
+        fig2 = px.pie(df, names=kpi1)
+
+    elif dist_chart_type == "Donut":
+        fig2 = px.pie(df, names=kpi1, hole=0.4)
+
+    st.plotly_chart(fig2, width="stretch")
 
 # =========================
 # HISTOGRAM & CORRELATION
