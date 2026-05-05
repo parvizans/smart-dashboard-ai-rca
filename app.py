@@ -197,6 +197,7 @@ with colC:
 with colD:
     if kpi2 != "None":
        st.markdown(f"### 🔗 Correlation: {kpi1} vs {kpi2}")
+        
         fig4 = px.scatter(df, x=kpi1, y=kpi2,
                           color_discrete_sequence=["#00e5ff"])
 
