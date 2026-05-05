@@ -15,16 +15,10 @@ st.set_page_config(layout="wide")
 st.markdown("""
 <style>
 
-/* FULL PAGE FIX */
+/* FULL PAGE */
 html, body, .stApp {
-    height: 100%;
     background-color: #0b1220;
     color: white;
-}
-
-/* FIX SCROLL + CONTENT CUT */
-.main {
-    overflow: auto;
 }
 
 /* SIDEBAR */
@@ -32,36 +26,34 @@ section[data-testid="stSidebar"] {
     background-color: #111827;
 }
 
-/* KPI CARDS TEXT FIX */
+section[data-testid="stSidebar"] * {
+    color: white !important;
+}
+
+/* KPI CARDS */
 [data-testid="stMetricValue"] {
     color: white !important;
     font-size: 26px !important;
     font-weight: bold;
 }
 
-/* KPI LABEL */
 [data-testid="stMetricLabel"] {
     color: #9ca3af !important;
 }
 
-/* SIDEBAR TEXT */
-section[data-testid="stSidebar"] * {
-    color: white !important;
-}
-
-/* SIDEBAR TOGGLE ICON (>> button) */
+/* FIX SIDEBAR BUTTON */
 button[kind="header"] {
     color: white !important;
 }
 
-/* REMOVE WHITE BLOCK BEHIND CHART */
+/* REMOVE WIDTH LIMIT */
 .block-container {
-    padding-top: 2rem;
+    max-width: 100% !important;
 }
 
-/* FIX EXPAND WIDTH */
-.block-container, .stApp {
-    max-width: 100% !important;
+/* FIX SCROLL CUT */
+.main {
+    overflow: auto;
 }
 
 </style>
@@ -150,27 +142,24 @@ with colA:
     df_plot = df.copy()
     x_axis = np.arange(len(df_plot))
 
-    # Normalize KPI1 (avoid flat line issue)
-    y1 = df_plot[kpi1]
-
-    if trend_chart_type in ["Line", "Area"]:
-        y1 = y1.rolling(window=smooth).mean()
-
-    # ===== MAIN CHART =====
     fig1 = go.Figure()
 
     # KPI1
+    y1 = df_plot[kpi1]
+    if trend_chart_type in ["Line", "Area"]:
+        y1 = y1.rolling(window=smooth).mean()
+
     fig1.add_trace(
         go.Scatter(
             x=x_axis,
             y=y1,
             mode="lines",
             name=kpi1,
-            line=dict(width=3)
+            line=dict(width=3, color="#4cc9f0")
         )
     )
 
-    # KPI2 (SECOND AXIS)
+    # KPI2
     if kpi2 != "None":
         fig1.add_trace(
             go.Scatter(
@@ -179,40 +168,52 @@ with colA:
                 mode="lines",
                 name=kpi2,
                 yaxis="y2",
-                line=dict(width=3, dash="dot")
+                line=dict(width=3, dash="dot", color="#f72585")
             )
         )
 
-    # ===== LAYOUT FIX (IMPORTANT) =====
+    # ===== LAYOUT FIX =====
     fig1.update_layout(
-        title=f"{kpi1} vs {kpi2 if kpi2 != 'None' else ''}",
+        title=dict(
+            text=f"{kpi1} vs {kpi2 if kpi2 != 'None' else ''}",
+            x=0.5,
+            y=0.92,
+            font=dict(color="white")
+        ),
+
         template="plotly_dark",
         plot_bgcolor="#0b1220",
         paper_bgcolor="#0b1220",
 
-        xaxis=dict(title="Time Index"),
+        xaxis=dict(
+            title="Time Index",
+            color="white",
+            gridcolor="rgba(255,255,255,0.08)"
+        ),
 
         yaxis=dict(
             title=kpi1,
-            showgrid=True,
+            color="white",
             gridcolor="rgba(255,255,255,0.08)"
         ),
 
         yaxis2=dict(
             title=kpi2,
             overlaying="y",
-            side="right"
+            side="right",
+            color="white"
         ) if kpi2 != "None" else None,
 
         legend=dict(
             orientation="h",
             yanchor="bottom",
-            y=1.15,   # 🔥 FIX OVERLAP
-            xanchor="left",
-            x=0
+            y=1.02,
+            xanchor="center",
+            x=0.5,
+            font=dict(color="white")
         ),
 
-        margin=dict(l=40, r=40, t=60, b=40)  # 🔥 FIX CROPPING
+        margin=dict(l=40, r=40, t=80, b=40)
     )
 
     st.plotly_chart(fig1, use_container_width=True)
