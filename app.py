@@ -10,39 +10,34 @@ import plotly.graph_objects as go
 st.set_page_config(layout="wide")
 
 # =========================
-# DARK THEME + UI FIX
+# DARK UI (STABLE VERSION)
 # =========================
 st.markdown("""
 <style>
 
-/* REMOVE HEADER */
-header[data-testid="stHeader"] {display: none;}
+/* Hide top bar */
+header[data-testid="stHeader"] {display:none;}
 
-/* REMOVE TOP GAP */
-.main {padding-top: 0rem !important;}
-
-/* BACKGROUND */
+/* Main background */
 .stApp {
     background-color: #0b1220;
     color: white;
 }
 
-/* SIDEBAR */
+/* Sidebar */
 section[data-testid="stSidebar"] {
-    width: 280px !important;
     background-color: #111827;
 }
 
-/* KPI CARDS */
+/* KPI cards */
 .stMetric {
     background: #1f2937;
-    padding: 20px;
-    border-radius: 12px;
+    padding: 15px;
+    border-radius: 10px;
     color: white !important;
-    font-weight: bold;
 }
 
-/* TITLES */
+/* Titles */
 h1, h2, h3 {
     color: #22c55e;
 }
@@ -57,7 +52,7 @@ st.title("🚀 Smart Telecom Dashboard")
 st.caption("AI-powered KPI Analysis & Root Cause Intelligence")
 
 # =========================
-# SIDEBAR
+# SIDEBAR (SAFE VERSION)
 # =========================
 st.sidebar.header("🎛️ Control Panel")
 
@@ -89,7 +84,7 @@ kpi2 = st.sidebar.selectbox("📌 KPI 2 (optional)", ["None"] + numeric_cols)
 
 trend_chart_type = st.sidebar.selectbox(
     "📊 Trend Chart Type",
-    ["Line", "Bar", "Scatter", "Area", "Stacked Bar", "Heatmap", "Treemap"]
+    ["Line", "Bar", "Scatter", "Area"]
 )
 
 dist_chart_type = st.sidebar.selectbox(
@@ -119,14 +114,14 @@ c3.metric("Min", round(kpi_series.min(), 2))
 c4.metric("Count", len(kpi_series))
 
 # =========================
-# KPI DASHBOARD
+# DASHBOARD
 # =========================
 st.subheader("📊 KPI Dashboard")
 
 colA, colB = st.columns(2)
 
 # =========================
-# TREND
+# TREND (FIXED)
 # =========================
 with colA:
 
@@ -137,7 +132,7 @@ with colA:
 
     if trend_chart_type == "Line":
         y = df_plot[kpi1].rolling(window=smooth).mean()
-        fig1 = px.line(df_plot, x=x_axis, y=y, line_shape="spline")
+        fig1 = px.line(df_plot, x=x_axis, y=y)
 
     elif trend_chart_type == "Bar":
         fig1 = px.bar(df_plot, x=x_axis, y=df_plot[kpi1])
@@ -152,22 +147,7 @@ with colA:
         y = df_plot[kpi1].rolling(window=smooth).mean()
         fig1 = px.area(df_plot, x=x_axis, y=y)
 
-    elif trend_chart_type == "Stacked Bar":
-        if kpi2 != "None":
-            fig1 = px.bar(df_plot, x=x_axis, y=[kpi1, kpi2], barmode="stack")
-        else:
-            fig1 = px.bar(df_plot, x=x_axis, y=df_plot[kpi1])
-
-    elif trend_chart_type == "Heatmap":
-        df_plot["bin"] = pd.cut(df_plot[kpi1], bins=20)
-        heat = df_plot.groupby("bin").size().reset_index(name="count")
-        fig1 = px.bar(heat, x="bin", y="count")
-
-    elif trend_chart_type == "Treemap":
-        df_plot["group"] = pd.qcut(df_plot[kpi1], q=5, duplicates="drop")
-        fig1 = px.treemap(df_plot, path=["group"], values=kpi1)
-
-    # KPI2 overlay
+    # KPI2 overlay (SAFE)
     if kpi2 != "None" and trend_chart_type in ["Line", "Area"]:
         fig1.add_trace(
             go.Scatter(
@@ -175,34 +155,35 @@ with colA:
                 y=df_plot[kpi2],
                 mode="lines",
                 name=kpi2,
-                yaxis="y2",
-                line=dict(width=3, dash="dot")
+                line=dict(width=2, dash="dot")
             )
         )
 
-        fig1.update_layout(
-            yaxis2=dict(
-                title=kpi2,
-                overlaying="y",
-                side="right"
-            )
-        )
-
-    # FINAL STYLE
+    # 🔥 FIXED LAYOUT (NO CUT / NO EDGE ISSUES)
     fig1.update_layout(
-        title=f"{trend_chart_type} | {kpi1}" + (f" vs {kpi2}" if kpi2 != "None" else ""),
+        title=f"{kpi1}" + (f" vs {kpi2}" if kpi2 != "None" else ""),
         template="plotly_dark",
         plot_bgcolor="#0b1220",
         paper_bgcolor="#0b1220",
-        hovermode="x unified",
-        xaxis=dict(gridcolor="rgba(255,255,255,0.08)"),
-        yaxis=dict(gridcolor="rgba(255,255,255,0.08)")
+
+        margin=dict(l=40, r=40, t=60, b=40),   # ✅ FIX CUT
+
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.05,
+            xanchor="left",
+            x=0
+        ),
+
+        xaxis=dict(gridcolor="rgba(255,255,255,0.05)"),
+        yaxis=dict(gridcolor="rgba(255,255,255,0.05)")
     )
 
-    st.plotly_chart(fig1, width="stretch")
+    st.plotly_chart(fig1, use_container_width=True)
 
 # =========================
-# DISTRIBUTION
+# DISTRIBUTION (FIXED)
 # =========================
 with colB:
 
@@ -221,8 +202,7 @@ with colB:
         template="plotly_dark",
         plot_bgcolor="#0b1220",
         paper_bgcolor="#0b1220",
-        xaxis=dict(gridcolor="rgba(255,255,255,0.08)"),
-        yaxis=dict(gridcolor="rgba(255,255,255,0.08)")
+        margin=dict(l=40, r=40, t=60, b=40)
     )
 
-    st.plotly_chart(fig2, width="stretch")
+    st.plotly_chart(fig2, use_container_width=True)
