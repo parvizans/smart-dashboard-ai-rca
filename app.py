@@ -7,24 +7,40 @@ import numpy as np
 # 🔥 DARK THEME (ADD HERE)
 st.markdown("""
 <style>
-    .stApp {
-        background-color: #0b1220;
-        color: white;
-    }
 
-    section[data-testid="stSidebar"] {
-        background-color: #111827;
-    }
+.stApp {
+    background-color: #0b1220;
+    color: white;
+}
 
-    .stMetric {
-        background: #1f2937;
-        padding: 15px;
-        border-radius: 10px;
-    }
+/* ✅ Sidebar width + style */
+section[data-testid="stSidebar"] {
+    width: 280px !important;
+    background-color: #111827;
+}
 
-    h1, h2, h3 {
-        color: #22c55e;
-    }
+/* ✅ Main content spacing */
+.main .block-container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-top: 1rem;
+}
+
+/* ✅ KPI cards */
+.stMetric {
+    background: #1f2937;
+    padding: 20px;
+    border-radius: 12px;
+    color: white !important;
+    font-weight: bold;
+    box-shadow: 0 0 10px rgba(34, 197, 94, 0.2);
+}
+
+/* ✅ Titles */
+h1, h2, h3 {
+    color: #22c55e;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -196,9 +212,11 @@ with colA:
     fig1.update_layout(
     title=f"{trend_chart_type} Trend of {kpi1}",
     hovermode="x unified",
-    template="plotly_dark",   # 🔥 ADD THIS LINE
     xaxis_title="Time Index",
     yaxis_title=kpi1,
+    template="plotly_dark",          # 🔥 ADD THIS
+    plot_bgcolor="#0b1220",          # 🔥 ADD THIS
+    paper_bgcolor="#0b1220",         # 🔥 ADD THIS
     legend=dict(
         title="KPIs",
         orientation="h",
@@ -208,7 +226,6 @@ with colA:
         x=1
     )
 )
-
     st.plotly_chart(fig1, width="stretch")
 
 # =========================
