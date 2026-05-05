@@ -179,11 +179,16 @@ with colB:
 # =========================
 colC, colD = st.columns(2)
 
+# ===== HISTOGRAM =====
 with colC:
     st.markdown(f"### 📊 Histogram of {kpi1}")
 
-    fig3 = px.histogram(df, x=kpi1, nbins=40,
-                        color_discrete_sequence=["#00e5ff"])
+    fig3 = px.histogram(
+        df,
+        x=kpi1,
+        nbins=40,
+        color_discrete_sequence=["#00e5ff"]
+    )
 
     fig3.update_layout(
         template="plotly_dark",
@@ -194,12 +199,18 @@ with colC:
 
     st.plotly_chart(fig3, use_container_width=True, key="hist")
 
+
+# ===== CORRELATION =====
 with colD:
     if kpi2 != "None":
-       st.markdown(f"### 🔗 Correlation: {kpi1} vs {kpi2}")
-        
-        fig4 = px.scatter(df, x=kpi1, y=kpi2,
-                          color_discrete_sequence=["#00e5ff"])
+        st.markdown(f"### 🔗 Correlation: {kpi1} vs {kpi2}")
+
+        fig4 = px.scatter(
+            df,
+            x=kpi1,
+            y=kpi2,
+            color_discrete_sequence=["#00e5ff"]
+        )
 
         fig4.update_layout(
             template="plotly_dark",
