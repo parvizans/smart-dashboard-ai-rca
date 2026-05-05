@@ -10,34 +10,30 @@ import plotly.graph_objects as go
 st.set_page_config(layout="wide")
 
 # =========================
-# FULL DARK UI
+# FULL DARK UI + CARDS
 # =========================
 st.markdown("""
 <style>
-
-/* ===== FULL BACKGROUND ===== */
 html, body, .stApp, .main, .block-container {
     background-color: #020617 !important;
     color: #e2e8f0 !important;
 }
 
-/* ===== SIDEBAR ===== */
+/* Sidebar */
 section[data-testid="stSidebar"] {
     background: linear-gradient(180deg, #0f172a, #020617);
+    padding: 15px;
 }
 section[data-testid="stSidebar"] * {
     color: #f1f5f9 !important;
-    font-weight: 500;
 }
 
-/* ===== INPUTS ===== */
-.stSelectbox div[data-baseweb="select"],
-.stFileUploader {
-    background-color: #1e293b !important;
-    border-radius: 8px !important;
+/* Sidebar spacing */
+.stSelectbox, .stSlider, .stFileUploader {
+    margin-bottom: 15px;
 }
 
-/* ===== KPI CARDS ===== */
+/* KPI cards */
 [data-testid="stMetricValue"] {
     color: white !important;
     font-size: 28px !important;
@@ -47,24 +43,30 @@ section[data-testid="stSidebar"] * {
     color: #94a3b8 !important;
 }
 
-/* REMOVE WHITE PLOT BACKGROUND */
+/* Card feel */
+.element-container {
+    background: rgba(30, 41, 59, 0.4);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 10px;
+}
+
+/* Remove plot background */
 .js-plotly-plot .plotly {
     background: transparent !important;
 }
-section[data-testid="stSidebar"] .stSelectbox,
-section[data-testid="stSidebar"] .stSlider,
-section[data-testid="stSidebar"] .stFileUploader {
-    color: #ffffff !important;
-}
-
 </style>
 """, unsafe_allow_html=True)
 
 # =========================
-# TITLE
+# HEADER
 # =========================
 st.title("🚀 Smart Telecom Dashboard")
-st.caption("AI-powered KPI Analysis & Root Cause Intelligence")
+
+st.markdown(
+    "<h3 style='color:#38bdf8;'>AI-powered KPI Analysis & Root Cause Intelligence</h3>",
+    unsafe_allow_html=True
+)
 
 # =========================
 # SIDEBAR
@@ -77,24 +79,20 @@ if uploaded_file is None:
     st.warning("⬅️ Upload CSV to start")
     st.stop()
 
-# =========================
-# LOAD DATA
-# =========================
 df = pd.read_csv(uploaded_file)
 df.columns = df.columns.str.strip().str.lower().str.replace(" ", "_")
 
-# =========================
-# KPI SELECTION
-# =========================
 numeric_cols = df.select_dtypes(include=['number']).columns.tolist()
 
 kpi1 = st.sidebar.selectbox("📌 KPI 1", numeric_cols)
 kpi2 = st.sidebar.selectbox("📌 KPI 2 (optional)", ["None"] + numeric_cols)
 
+smooth = st.sidebar.slider("Smoothing Level", 1, 20, 5)
+
 # =========================
 # KPI OVERVIEW
 # =========================
-st.subheader("📊 KPI Overview")
+st.markdown("<h3>📊 KPI Overview</h3>", unsafe_allow_html=True)
 
 kpi_series = df[kpi1].dropna()
 
@@ -105,7 +103,7 @@ c3.metric("Min", round(kpi_series.min(), 2))
 c4.metric("Count", len(kpi_series))
 
 # =========================
-# DASHBOARD
+# MAIN CHARTS
 # =========================
 colA, colB = st.columns(2)
 
@@ -116,60 +114,66 @@ with colA:
     x_axis = np.arange(len(df))
     fig1 = go.Figure()
 
+    y1 = df[kpi1].rolling(window=smooth).mean()
+
     fig1.add_trace(go.Scatter(
         x=x_axis,
-        y=df[kpi1],
+        y=y1,
         mode="lines",
         name=kpi1,
-        line=dict(color="#00eaff", width=3)   # main line
-
+        line=dict(color="#00eaff", width=3)
     ))
 
     if kpi2 != "None":
         fig1.add_trace(go.Scatter(
             x=x_axis,
-            y=df[kpi2],
+            y=df[kpi2].rolling(window=smooth).mean(),
             mode="lines",
             name=kpi2,
             yaxis="y2",
-            line=dict(color="#ff2da3", width=3, dash="dot")  # second KPI
+            line=dict(color="#ff2da3", width=3, dash="dot")
         ))
 
     fig1.update_layout(
-    title=dict(
-        text=f"{kpi1} vs {kpi2}" if kpi2 != "None" else f"{kpi1} Trend",
-        x=0.45,   # 👈 slightly left (your request)
-        font=dict(size=20, color="#ffffff")
-    ),
+        title=dict(
+            text=f"{kpi1} vs {kpi2}" if kpi2 != "None" else f"{kpi1} Trend",
+            x=0.45,
+            font=dict(color="white")
+        ),
+        template="plotly_dark",
+        plot_bgcolor="#020617",
+        paper_bgcolor="#020617",
+        xaxis=dict(showgrid=False),
+        yaxis=dict(showgrid=False),
+        legend=dict(
+            orientation="h",
+            y=1.15,
+            x=0.01,
+            font=dict(color="#e2e8f0")
+        ),
+        yaxis2=dict(overlaying="y", side="right") if kpi2 != "None" else None
+    )
 
-    template="plotly_dark",
-    plot_bgcolor="#020617",
-    paper_bgcolor="#020617",
-
-    legend=dict(
-        font=dict(color="#ffffff"),
-        orientation="h",
-        x=0.45,   # 👈 move left (important fix)
-        xanchor="center",
-        y=1.05
-    ),
-
-    yaxis2=dict(overlaying="y", side="right") if kpi2 != "None" else None
-)
     st.plotly_chart(fig1, use_container_width=True, key="trend")
 
 # ===== DISTRIBUTION =====
 with colB:
     st.markdown(f"### 📊 Distribution of {kpi1}")
 
-    fig2 = px.histogram(df, x=kpi1, nbins=40,
-                        color_discrete_sequence=["#00e5ff"])
+    fig2 = px.histogram(
+        df,
+        x=kpi1,
+        nbins=40,
+        color_discrete_sequence=["#00eaff"]
+    )
 
     fig2.update_layout(
         template="plotly_dark",
         plot_bgcolor="#020617",
         paper_bgcolor="#020617",
-        font=dict(color="white")
+        font=dict(color="white"),
+        xaxis=dict(showgrid=False, title=kpi1),
+        yaxis=dict(showgrid=False, title="Count")
     )
 
     st.plotly_chart(fig2, use_container_width=True, key="dist")
@@ -179,7 +183,6 @@ with colB:
 # =========================
 colC, colD = st.columns(2)
 
-# ===== HISTOGRAM =====
 with colC:
     st.markdown(f"### 📊 Histogram of {kpi1}")
 
@@ -187,20 +190,20 @@ with colC:
         df,
         x=kpi1,
         nbins=40,
-        color_discrete_sequence=["#00e5ff"]
+        color_discrete_sequence=["#00eaff"]
     )
 
     fig3.update_layout(
         template="plotly_dark",
         plot_bgcolor="#020617",
         paper_bgcolor="#020617",
-        font=dict(color="white")
+        font=dict(color="white"),
+        xaxis=dict(showgrid=False),
+        yaxis=dict(showgrid=False)
     )
 
     st.plotly_chart(fig3, use_container_width=True, key="hist")
 
-
-# ===== CORRELATION =====
 with colD:
     if kpi2 != "None":
         st.markdown(f"### 🔗 Correlation: {kpi1} vs {kpi2}")
@@ -209,14 +212,16 @@ with colD:
             df,
             x=kpi1,
             y=kpi2,
-            color_discrete_sequence=["#00e5ff"]
+            color_discrete_sequence=["#00eaff"]
         )
 
         fig4.update_layout(
             template="plotly_dark",
             plot_bgcolor="#020617",
             paper_bgcolor="#020617",
-            font=dict(color="white")
+            font=dict(color="white"),
+            xaxis=dict(showgrid=False),
+            yaxis=dict(showgrid=False)
         )
 
         st.plotly_chart(fig4, use_container_width=True, key="corr")
@@ -224,7 +229,7 @@ with colD:
 # =========================
 # KPI HEALTH
 # =========================
-st.subheader("🧠 KPI Health")
+st.markdown("### 🧠 KPI Health")
 
 mean_val = kpi_series.mean()
 std_val = kpi_series.std()
@@ -237,34 +242,3 @@ elif ratio > 0.25:
     st.warning("🟡 Unstable")
 else:
     st.success("🟢 Healthy")
-
-# =========================
-# TELECOM INTELLIGENCE
-# =========================
-st.subheader("📡 Telecom Intelligence")
-
-issues = []
-actions = []
-
-if mean_val < kpi_series.max() * 0.5:
-    issues.append("Coverage issue detected")
-    actions.append("Check RSRP")
-
-if std_val > mean_val * 0.3:
-    issues.append("Mobility instability")
-    actions.append("Tune Handover")
-
-if kpi_series.max() > mean_val * 2:
-    issues.append("Possible congestion")
-    actions.append("Check PRB")
-
-if issues:
-    st.error("⚠️ Issues Detected")
-    for i in issues:
-        st.write(f"• {i}")
-
-    st.warning("🛠 Recommendations")
-    for a in actions:
-        st.write(f"👉 {a}")
-else:
-    st.success("✅ Network looks stable")
