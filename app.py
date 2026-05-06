@@ -10,27 +10,37 @@ import plotly.graph_objects as go
 st.set_page_config(layout="wide")
 
 # =========================
-# FULL DARK UI + CARDS
+# FULL DARK UI + SIDEBAR FIX
 # =========================
 st.markdown("""
 <style>
+
+/* MAIN BACKGROUND */
 html, body, .stApp, .main, .block-container {
     background-color: #020617 !important;
     color: #e2e8f0 !important;
 }
 
-/* Sidebar */
+/* SIDEBAR */
 section[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #0f172a, #020617);
+    background: linear-gradient(180deg, #020617, #020617);
+    border-right: 1px solid rgba(56,189,248,0.15);
     padding: 15px;
 }
+
+/* Sidebar text stronger */
 section[data-testid="stSidebar"] * {
-    color: #f1f5f9 !important;
+    color: #e2e8f0 !important;
+    font-weight: 500;
 }
 
-/* Sidebar spacing */
-.stSelectbox, .stSlider, .stFileUploader {
-    margin-bottom: 15px;
+/* Sidebar controls */
+.stSelectbox div[data-baseweb="select"],
+.stFileUploader,
+.stSlider {
+    background-color: #0f172a !important;
+    border-radius: 10px !important;
+    border: 1px solid rgba(56,189,248,0.2) !important;
 }
 
 /* KPI cards */
@@ -43,7 +53,7 @@ section[data-testid="stSidebar"] * {
     color: #94a3b8 !important;
 }
 
-/* Card feel */
+/* Card effect */
 .element-container {
     background: rgba(30, 41, 59, 0.4);
     border-radius: 12px;
@@ -55,6 +65,7 @@ section[data-testid="stSidebar"] * {
 .js-plotly-plot .plotly {
     background: transparent !important;
 }
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -139,8 +150,6 @@ with colA:
             text=f"{kpi1} vs {kpi2}" if kpi2 != "None" else f"{kpi1} Trend",
             x=0.5,
             y=0.92,
-            xanchor="center",
-            yanchor="top",
             font=dict(size=20, color="#ffffff")
         ),
         template="plotly_dark",
@@ -150,14 +159,14 @@ with colA:
         xaxis=dict(
             showgrid=False,
             title=kpi1,
-            titlefont=dict(size=14, color="#ffffff"),
+            titlefont=dict(color="#ffffff"),
             tickfont=dict(color="#cbd5f5")
         ),
 
         yaxis=dict(
             showgrid=False,
             title=kpi1,
-            titlefont=dict(size=14, color="#ffffff"),
+            titlefont=dict(color="#ffffff"),
             tickfont=dict(color="#cbd5f5")
         ),
 
@@ -165,9 +174,7 @@ with colA:
             orientation="h",
             x=0.5,
             y=-0.2,
-            xanchor="center",
-            yanchor="top",
-            font=dict(color="#e2e8f0", size=12)
+            xanchor="center"
         ),
 
         margin=dict(l=40, r=40, t=80, b=80),
@@ -176,12 +183,12 @@ with colA:
             overlaying="y",
             side="right",
             title=kpi2,
-            titlefont=dict(size=14, color="#ffffff"),
+            titlefont=dict(color="#ffffff"),
             tickfont=dict(color="#cbd5f5")
         ) if kpi2 != "None" else None
     )
 
-    st.plotly_chart(fig1, use_container_width=True, key="trend")
+    st.plotly_chart(fig1, use_container_width=True)
 
 # ===== DISTRIBUTION =====
 with colB:
@@ -195,21 +202,11 @@ with colB:
         plot_bgcolor="#020617",
         paper_bgcolor="#020617",
         font=dict(color="white"),
-
-        xaxis=dict(
-            title=kpi1,
-            titlefont=dict(size=14, color="#ffffff"),
-            tickfont=dict(color="#cbd5f5")
-        ),
-
-        yaxis=dict(
-            title="Count",
-            titlefont=dict(size=14, color="#ffffff"),
-            tickfont=dict(color="#cbd5f5")
-        )
+        xaxis=dict(title=kpi1),
+        yaxis=dict(title="Count")
     )
 
-    st.plotly_chart(fig2, use_container_width=True, key="dist")
+    st.plotly_chart(fig2, use_container_width=True)
 
 # =========================
 # EXTRA CHARTS
@@ -218,58 +215,16 @@ colC, colD = st.columns(2)
 
 with colC:
     st.markdown(f"### 📊 Histogram of {kpi1}")
-
     fig3 = px.histogram(df, x=kpi1, nbins=40,
                         color_discrete_sequence=["#00eaff"])
-
-    fig3.update_layout(
-        template="plotly_dark",
-        plot_bgcolor="#020617",
-        paper_bgcolor="#020617",
-        font=dict(color="white"),
-
-        xaxis=dict(
-            title=kpi1,
-            titlefont=dict(size=14, color="#ffffff"),
-            tickfont=dict(color="#cbd5f5")
-        ),
-
-        yaxis=dict(
-            title="Count",
-            titlefont=dict(size=14, color="#ffffff"),
-            tickfont=dict(color="#cbd5f5")
-        )
-    )
-
-    st.plotly_chart(fig3, use_container_width=True, key="hist")
+    st.plotly_chart(fig3, use_container_width=True)
 
 with colD:
     if kpi2 != "None":
         st.markdown(f"### 🔗 Correlation: {kpi1} vs {kpi2}")
-
         fig4 = px.scatter(df, x=kpi1, y=kpi2,
                           color_discrete_sequence=["#00eaff"])
-
-        fig4.update_layout(
-            template="plotly_dark",
-            plot_bgcolor="#020617",
-            paper_bgcolor="#020617",
-            font=dict(color="white"),
-
-            xaxis=dict(
-                title=kpi1,
-                titlefont=dict(size=14, color="#ffffff"),
-                tickfont=dict(color="#cbd5f5")
-            ),
-
-            yaxis=dict(
-                title=kpi2,
-                titlefont=dict(size=14, color="#ffffff"),
-                tickfont=dict(color="#cbd5f5")
-            )
-        )
-
-        st.plotly_chart(fig4, use_container_width=True, key="corr")
+        st.plotly_chart(fig4, use_container_width=True)
 
 # =========================
 # KPI HEALTH
