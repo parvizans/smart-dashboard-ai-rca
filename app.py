@@ -14,68 +14,105 @@ st.set_page_config(layout="wide", page_title="Smart Telecom Dashboard")
 # =========================
 st.markdown("""
 <style>
+
+/* =========================================================
+   🌌 GLOBAL APP BACKGROUND
+========================================================= */
 html, body, .stApp, .main, .block-container {
     background-color: #020617 !important;
     color: #e2e8f0 !important;
 }
 
+
+/* =========================================================
+   📦 CARD / CONTAINER STYLE (ALL CHART BOXES)
+========================================================= */
+.element-container {
+    background: rgba(30, 41, 59, 0.42);
+    border-radius: 14px;
+    padding: 12px;
+    margin-bottom: 12px;
+}
+
+
+/* =========================================================
+   📊 KPI METRICS STYLE
+========================================================= */
+[data-testid="stMetricValue"] {
+    color: #ffffff !important;
+    font-size: 28px !important;
+    font-weight: 800 !important;
+}
+
+[data-testid="stMetricLabel"] {
+    color: #94a3b8 !important;
+}
+
+
+/* =========================================================
+   🎛️ SIDEBAR MAIN PANEL
+========================================================= */
 section[data-testid="stSidebar"] {
     background: linear-gradient(180deg, #020617 0%, #0f172a 100%) !important;
     border-right: 1px solid rgba(56,189,248,0.25);
     padding: 18px 10px;
 }
 
+
+/* =========================================================
+   📝 SIDEBAR TEXT
+========================================================= */
 section[data-testid="stSidebar"] * {
-    color: #f8fafc !important;
-    font-weight: 600 !important;
+    color: #e2e8f0 !important;
+    font-weight: 500 !important;
 }
 
-section[data-testid="stSidebar"] .stSelectbox,
-section[data-testid="stSidebar"] .stSlider,
-section[data-testid="stSidebar"] .stFileUploader {
-    background: #111827 !important;
-    border: 1px solid rgba(56,189,248,0.35) !important;
-    border-radius: 14px !important;
-    padding: 12px !important;
-    margin-bottom: 18px !important;
-}
 
+/* =========================================================
+   🔲 SIDEBAR INPUT BOXES (FIXED DARK MODE)
+========================================================= */
 section[data-testid="stSidebar"] input,
 section[data-testid="stSidebar"] textarea,
 section[data-testid="stSidebar"] select,
 section[data-testid="stSidebar"] div[data-baseweb="select"] {
-    background-color: #f8fafc !important;
-    color: #020617 !important;
-    border-radius: 8px !important;
-}
-
-section[data-testid="stSidebar"] [data-testid="stFileUploaderDropzone"] {
-    background-color: #f8fafc !important;
+    background-color: #020617 !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(56,189,248,0.4) !important;
     border-radius: 10px !important;
 }
+
+
+/* =========================================================
+   📂 FILE UPLOADER FIX
+========================================================= */
+section[data-testid="stSidebar"] [data-testid="stFileUploaderDropzone"] {
+    background-color: #020617 !important;
+    border: 1px dashed rgba(56,189,248,0.4) !important;
+    border-radius: 10px !important;
+}
+
 section[data-testid="stSidebar"] [data-testid="stFileUploaderDropzone"] * {
-    color: #020617 !important;
+    color: #e2e8f0 !important;
 }
 
-[data-testid="stMetricValue"] {
-    color: #ffffff !important;
-    font-size: 28px !important;
-    font-weight: 800 !important;
-}
-[data-testid="stMetricLabel"] {
-    color: #94a3b8 !important;
+
+/* =========================================================
+   📏 SIDEBAR SPACING
+========================================================= */
+section[data-testid="stSidebar"] .stSelectbox,
+section[data-testid="stSidebar"] .stSlider,
+section[data-testid="stSidebar"] .stFileUploader {
+    margin-bottom: 16px !important;
 }
 
-.element-container {
-    background: rgba(30, 41, 59, 0.42);
-    border-radius: 14px;
-    padding: 12px;
-    margin-bottom: 10px;
-}
 
+/* =========================================================
+   📈 PLOTLY BACKGROUND FIX
+========================================================= */
 .js-plotly-plot .plotly {
     background: transparent !important;
 }
+
 </style>
 """, unsafe_allow_html=True)
 
