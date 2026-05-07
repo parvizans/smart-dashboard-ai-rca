@@ -16,46 +16,48 @@ st.markdown("""
 <style>
 
 /* =========================================================
-   🌌 GLOBAL APP BACKGROUND
+   🌌 GLOBAL BACKGROUND (DEEP BLACK)
 ========================================================= */
 html, body, .stApp, .main, .block-container {
-    background-color: #020617 !important;
+    background-color: #01040a !important;
     color: #e2e8f0 !important;
 }
 
 
 /* =========================================================
-   📦 CARD / CONTAINER STYLE (ALL CHART BOXES)
+   📦 CARD / CONTAINER (STRONG CONTRAST)
 ========================================================= */
 .element-container {
-    background: rgba(30, 41, 59, 0.42);
-    border-radius: 14px;
-    padding: 12px;
-    margin-bottom: 12px;
+    background: #020617 !important;
+    border: 1px solid rgba(56,189,248,0.15);
+    border-radius: 16px;
+    padding: 14px;
+    margin-bottom: 14px;
 }
 
 
 /* =========================================================
-   📊 KPI METRICS STYLE
+   📊 KPI METRICS (BRIGHT)
 ========================================================= */
 [data-testid="stMetricValue"] {
     color: #ffffff !important;
-    font-size: 28px !important;
-    font-weight: 800 !important;
+    font-size: 30px !important;
+    font-weight: 900 !important;
 }
 
 [data-testid="stMetricLabel"] {
     color: #94a3b8 !important;
+    font-size: 13px !important;
 }
 
 
 /* =========================================================
-   🎛️ SIDEBAR MAIN PANEL
+   🎛️ SIDEBAR BACKGROUND (DEEP + CLEAN)
 ========================================================= */
 section[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #020617 0%, #0f172a 100%) !important;
-    border-right: 1px solid rgba(56,189,248,0.25);
-    padding: 18px 10px;
+    background: linear-gradient(180deg, #01040a 0%, #020617 100%) !important;
+    border-right: 1px solid rgba(56,189,248,0.15);
+    padding: 20px 12px;
 }
 
 
@@ -63,54 +65,63 @@ section[data-testid="stSidebar"] {
    📝 SIDEBAR TEXT
 ========================================================= */
 section[data-testid="stSidebar"] * {
-    color: #e2e8f0 !important;
+    color: #cbd5f5 !important;
     font-weight: 500 !important;
 }
 
 
 /* =========================================================
-   🔲 SIDEBAR INPUT BOXES (FIXED DARK MODE)
+   🔲 INPUT BOXES (DARK FIX)
 ========================================================= */
 section[data-testid="stSidebar"] input,
 section[data-testid="stSidebar"] textarea,
 section[data-testid="stSidebar"] select,
 section[data-testid="stSidebar"] div[data-baseweb="select"] {
-    background-color: #020617 !important;
+    background-color: #01040a !important;
     color: #ffffff !important;
-    border: 1px solid rgba(56,189,248,0.4) !important;
+    border: 1px solid rgba(56,189,248,0.25) !important;
     border-radius: 10px !important;
 }
 
 
 /* =========================================================
-   📂 FILE UPLOADER FIX
+   📂 FILE UPLOADER (DARK FIX)
 ========================================================= */
 section[data-testid="stSidebar"] [data-testid="stFileUploaderDropzone"] {
-    background-color: #020617 !important;
-    border: 1px dashed rgba(56,189,248,0.4) !important;
+    background-color: #01040a !important;
+    border: 1px dashed rgba(56,189,248,0.25) !important;
     border-radius: 10px !important;
 }
 
 section[data-testid="stSidebar"] [data-testid="stFileUploaderDropzone"] * {
-    color: #e2e8f0 !important;
+    color: #cbd5f5 !important;
 }
 
 
 /* =========================================================
-   📏 SIDEBAR SPACING
+   📏 SPACING
 ========================================================= */
 section[data-testid="stSidebar"] .stSelectbox,
 section[data-testid="stSidebar"] .stSlider,
 section[data-testid="stSidebar"] .stFileUploader {
-    margin-bottom: 16px !important;
+    margin-bottom: 18px !important;
 }
 
 
 /* =========================================================
-   📈 PLOTLY BACKGROUND FIX
+   📈 PLOTLY BACKGROUND
 ========================================================= */
 .js-plotly-plot .plotly {
     background: transparent !important;
+}
+
+
+/* =========================================================
+   ✨ OPTIONAL: HOVER EFFECT (PREMIUM FEEL)
+========================================================= */
+.element-container:hover {
+    border: 1px solid rgba(56,189,248,0.35);
+    transition: 0.2s ease-in-out;
 }
 
 </style>
