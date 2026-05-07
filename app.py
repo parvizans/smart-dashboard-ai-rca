@@ -304,7 +304,57 @@ correlation_chart_type = st.sidebar.selectbox(
     "Correlation Chart Type",
     ["Scatter", "Line", "Bar"]
 )
+# =========================================================
+# 🚀 TOP FILTER BAR (MAIN CONTROL)
+# =========================================================
 
+st.markdown("### 🔎 Quick Filters")
+
+top1, top2, top3, top4 = st.columns([2,2,2,2])
+
+# Detect columns
+numeric_cols = df.select_dtypes(include=['int64','float64']).columns.tolist()
+all_cols = df.columns.tolist()
+
+with top1:
+    kpi1 = st.selectbox(
+        "Primary KPI",
+        numeric_cols,
+        index=0,
+        key="top_kpi1"
+    )
+
+with top2:
+    kpi2 = st.selectbox(
+        "Secondary KPI",
+        ["None"] + numeric_cols,
+        key="top_kpi2"
+    )
+
+with top3:
+    chart_type = st.selectbox(
+        "Chart Type",
+        ["Line", "Bar", "Area"],
+        key="top_chart"
+    )
+
+with top4:
+    if "date" in [c.lower() for c in df.columns]:
+        date_col = [c for c in df.columns if "date" in c.lower()][0]
+
+        df[date_col] = pd.to_datetime(df[date_col], errors='coerce')
+
+        date_range = st.date_input(
+            "Date Range",
+            [df[date_col].min(), df[date_col].max()],
+            key="top_date"
+        )
+
+        if len(date_range) == 2:
+            df = df[
+                (df[date_col] >= pd.to_datetime(date_range[0])) &
+                (df[date_col] <= pd.to_datetime(date_range[1]))
+            ]
 # =========================
 # KPI OVERVIEW
 # =========================
