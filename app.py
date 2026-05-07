@@ -111,15 +111,32 @@ def style_fig(fig, title, x_title="", y_title="", legend_bottom=False):
             x=0.5,
             font=dict(size=20, color="#ffffff")
         ),
-        xaxis=dict(
+                xaxis=dict(
             title=dict(text=x_title, font=dict(size=15, color="#ffffff")),
             tickfont=dict(color="#cbd5e1"),
-            showgrid=False
+
+            showgrid=False,
+
+            showline=True,
+            linewidth=1.5,
+            linecolor="#00eaff",
+
+            zeroline=True,
+            zerolinecolor="rgba(255,255,255,0.15)"
         ),
+
         yaxis=dict(
             title=dict(text=y_title, font=dict(size=15, color="#ffffff")),
             tickfont=dict(color="#cbd5e1"),
-            showgrid=False
+
+            showgrid=False,
+
+            showline=True,
+            linewidth=1.5,
+            linecolor="#00eaff",
+
+            zeroline=True,
+            zerolinecolor="rgba(255,255,255,0.15)"
         ),
         margin=dict(l=50, r=50, t=80, b=85)
     )
@@ -135,6 +152,12 @@ def style_fig(fig, title, x_title="", y_title="", legend_bottom=False):
         )
 
     fig.update_layout(**layout)
+    fig.update_traces(
+        hovertemplate=
+        "<b>%{fullData.name}</b><br>" +
+        "X: %{x}<br>" +
+        "Y: %{y:.2f}<extra></extra>"
+    )
     return fig
 
 
