@@ -16,28 +16,110 @@ st.markdown("""
 <style>
 
 /* =========================================================
-   🌌 GLOBAL BACKGROUND (PURE BLACK)
+   🌑 GLOBAL APP BACKGROUND
 ========================================================= */
 html, body, .stApp, .main, .block-container {
     background-color: #000000 !important;
-    color: #e5e7eb !important;
+    color: #f8fafc !important;
 }
 
-
 /* =========================================================
-   📦 CARD / CONTAINER (STRONG BLACK GLASS)
+   📦 MAIN CARDS / SECTIONS
 ========================================================= */
 .element-container {
     background: #050505 !important;
-    border: 1px solid rgba(0,255,255,0.08);
-    border-radius: 16px;
-    padding: 14px;
-    margin-bottom: 14px;
+    border: 1px solid rgba(0, 234, 255, 0.14) !important;
+    border-radius: 16px !important;
+    padding: 14px !important;
+    margin-bottom: 14px !important;
 }
 
+/* =========================================================
+   🎛️ SIDEBAR / CONTROL PANEL - FULL BLACK
+========================================================= */
+section[data-testid="stSidebar"] {
+    background: #000000 !important;
+    border-right: 1px solid rgba(0, 234, 255, 0.25) !important;
+    padding: 20px 12px !important;
+}
+
+/* Sidebar all text */
+section[data-testid="stSidebar"] * {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+}
+
+/* Sidebar labels */
+section[data-testid="stSidebar"] label,
+section[data-testid="stSidebar"] p,
+section[data-testid="stSidebar"] span {
+    color: #f8fafc !important;
+    font-size: 13px !important;
+}
 
 /* =========================================================
-   📊 KPI METRICS (HIGH CONTRAST)
+   🔲 SIDEBAR CONTROL BOXES
+========================================================= */
+section[data-testid="stSidebar"] .stSelectbox,
+section[data-testid="stSidebar"] .stSlider,
+section[data-testid="stSidebar"] .stFileUploader {
+    background: #050505 !important;
+    border: 1px solid rgba(0, 234, 255, 0.28) !important;
+    border-radius: 14px !important;
+    padding: 12px !important;
+    margin-bottom: 18px !important;
+}
+
+/* =========================================================
+   ⬇️ DROPDOWNS / INPUTS
+========================================================= */
+section[data-testid="stSidebar"] div[data-baseweb="select"],
+section[data-testid="stSidebar"] input,
+section[data-testid="stSidebar"] textarea,
+section[data-testid="stSidebar"] select {
+    background-color: #020202 !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(0, 234, 255, 0.35) !important;
+    border-radius: 10px !important;
+}
+
+/* Dropdown selected text */
+section[data-testid="stSidebar"] div[data-baseweb="select"] * {
+    color: #ffffff !important;
+}
+
+/* Dropdown arrow/icon */
+section[data-testid="stSidebar"] svg {
+    color: #00eaff !important;
+    fill: #00eaff !important;
+}
+
+/* =========================================================
+   📂 FILE UPLOADER
+========================================================= */
+section[data-testid="stSidebar"] [data-testid="stFileUploaderDropzone"] {
+    background-color: #020202 !important;
+    border: 1px dashed rgba(0, 234, 255, 0.35) !important;
+    border-radius: 12px !important;
+}
+
+section[data-testid="stSidebar"] [data-testid="stFileUploaderDropzone"] * {
+    color: #ffffff !important;
+}
+
+/* =========================================================
+   📏 SLIDER
+========================================================= */
+section[data-testid="stSidebar"] .stSlider {
+    color: #ffffff !important;
+}
+
+section[data-testid="stSidebar"] [data-testid="stSliderThumbValue"] {
+    color: #ffffff !important;
+}
+
+/* =========================================================
+   📊 KPI METRICS
 ========================================================= */
 [data-testid="stMetricValue"] {
     color: #ffffff !important;
@@ -46,81 +128,22 @@ html, body, .stApp, .main, .block-container {
 }
 
 [data-testid="stMetricLabel"] {
-    color: #9ca3af !important;
+    color: #cbd5e1 !important;
     font-size: 13px !important;
 }
 
-
 /* =========================================================
-   🎛️ SIDEBAR (PURE BLACK PANEL)
-========================================================= */
-section[data-testid="stSidebar"] {
-    background: #000000 !important;
-    border-right: 1px solid rgba(0,255,255,0.1);
-    padding: 20px 12px;
-}
-
-
-/* =========================================================
-   📝 SIDEBAR TEXT
-========================================================= */
-section[data-testid="stSidebar"] * {
-    color: #d1d5db !important;
-    font-weight: 500 !important;
-}
-
-
-/* =========================================================
-   🔲 INPUT BOXES (TRUE DARK)
-========================================================= */
-section[data-testid="stSidebar"] input,
-section[data-testid="stSidebar"] textarea,
-section[data-testid="stSidebar"] select,
-section[data-testid="stSidebar"] div[data-baseweb="select"] {
-    background-color: #000000 !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(0,255,255,0.2) !important;
-    border-radius: 10px !important;
-}
-
-
-/* =========================================================
-   📂 FILE UPLOADER
-========================================================= */
-section[data-testid="stSidebar"] [data-testid="stFileUploaderDropzone"] {
-    background-color: #000000 !important;
-    border: 1px dashed rgba(0,255,255,0.25) !important;
-    border-radius: 10px !important;
-}
-
-section[data-testid="stSidebar"] [data-testid="stFileUploaderDropzone"] * {
-    color: #d1d5db !important;
-}
-
-
-/* =========================================================
-   📏 SPACING
-========================================================= */
-section[data-testid="stSidebar"] .stSelectbox,
-section[data-testid="stSidebar"] .stSlider,
-section[data-testid="stSidebar"] .stFileUploader {
-    margin-bottom: 18px !important;
-}
-
-
-/* =========================================================
-   📈 PLOTLY CLEAN BACKGROUND
+   📈 PLOTLY BACKGROUND
 ========================================================= */
 .js-plotly-plot .plotly {
     background: transparent !important;
 }
 
-
 /* =========================================================
-   ✨ HOVER EFFECT (PREMIUM TOUCH)
+   ✨ HOVER EFFECT
 ========================================================= */
 .element-container:hover {
-    border: 1px solid rgba(0,255,255,0.35);
+    border: 1px solid rgba(0, 234, 255, 0.45) !important;
     transition: 0.2s ease-in-out;
 }
 
