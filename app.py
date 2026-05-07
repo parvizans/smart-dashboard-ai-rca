@@ -16,20 +16,20 @@ st.markdown("""
 <style>
 
 /* =========================================================
-   🌌 GLOBAL BACKGROUND (DEEP BLACK)
+   🌌 GLOBAL BACKGROUND (PURE BLACK)
 ========================================================= */
 html, body, .stApp, .main, .block-container {
-    background-color: #01040a !important;
-    color: #e2e8f0 !important;
+    background-color: #000000 !important;
+    color: #e5e7eb !important;
 }
 
 
 /* =========================================================
-   📦 CARD / CONTAINER (STRONG CONTRAST)
+   📦 CARD / CONTAINER (STRONG BLACK GLASS)
 ========================================================= */
 .element-container {
-    background: #020617 !important;
-    border: 1px solid rgba(56,189,248,0.15);
+    background: #050505 !important;
+    border: 1px solid rgba(0,255,255,0.08);
     border-radius: 16px;
     padding: 14px;
     margin-bottom: 14px;
@@ -37,7 +37,7 @@ html, body, .stApp, .main, .block-container {
 
 
 /* =========================================================
-   📊 KPI METRICS (BRIGHT)
+   📊 KPI METRICS (HIGH CONTRAST)
 ========================================================= */
 [data-testid="stMetricValue"] {
     color: #ffffff !important;
@@ -46,17 +46,17 @@ html, body, .stApp, .main, .block-container {
 }
 
 [data-testid="stMetricLabel"] {
-    color: #94a3b8 !important;
+    color: #9ca3af !important;
     font-size: 13px !important;
 }
 
 
 /* =========================================================
-   🎛️ SIDEBAR BACKGROUND (DEEP + CLEAN)
+   🎛️ SIDEBAR (PURE BLACK PANEL)
 ========================================================= */
 section[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #01040a 0%, #020617 100%) !important;
-    border-right: 1px solid rgba(56,189,248,0.15);
+    background: #000000 !important;
+    border-right: 1px solid rgba(0,255,255,0.1);
     padding: 20px 12px;
 }
 
@@ -65,36 +65,36 @@ section[data-testid="stSidebar"] {
    📝 SIDEBAR TEXT
 ========================================================= */
 section[data-testid="stSidebar"] * {
-    color: #cbd5f5 !important;
+    color: #d1d5db !important;
     font-weight: 500 !important;
 }
 
 
 /* =========================================================
-   🔲 INPUT BOXES (DARK FIX)
+   🔲 INPUT BOXES (TRUE DARK)
 ========================================================= */
 section[data-testid="stSidebar"] input,
 section[data-testid="stSidebar"] textarea,
 section[data-testid="stSidebar"] select,
 section[data-testid="stSidebar"] div[data-baseweb="select"] {
-    background-color: #01040a !important;
+    background-color: #000000 !important;
     color: #ffffff !important;
-    border: 1px solid rgba(56,189,248,0.25) !important;
+    border: 1px solid rgba(0,255,255,0.2) !important;
     border-radius: 10px !important;
 }
 
 
 /* =========================================================
-   📂 FILE UPLOADER (DARK FIX)
+   📂 FILE UPLOADER
 ========================================================= */
 section[data-testid="stSidebar"] [data-testid="stFileUploaderDropzone"] {
-    background-color: #01040a !important;
-    border: 1px dashed rgba(56,189,248,0.25) !important;
+    background-color: #000000 !important;
+    border: 1px dashed rgba(0,255,255,0.25) !important;
     border-radius: 10px !important;
 }
 
 section[data-testid="stSidebar"] [data-testid="stFileUploaderDropzone"] * {
-    color: #cbd5f5 !important;
+    color: #d1d5db !important;
 }
 
 
@@ -109,7 +109,7 @@ section[data-testid="stSidebar"] .stFileUploader {
 
 
 /* =========================================================
-   📈 PLOTLY BACKGROUND
+   📈 PLOTLY CLEAN BACKGROUND
 ========================================================= */
 .js-plotly-plot .plotly {
     background: transparent !important;
@@ -117,10 +117,10 @@ section[data-testid="stSidebar"] .stFileUploader {
 
 
 /* =========================================================
-   ✨ OPTIONAL: HOVER EFFECT (PREMIUM FEEL)
+   ✨ HOVER EFFECT (PREMIUM TOUCH)
 ========================================================= */
 .element-container:hover {
-    border: 1px solid rgba(56,189,248,0.35);
+    border: 1px solid rgba(0,255,255,0.35);
     transition: 0.2s ease-in-out;
 }
 
