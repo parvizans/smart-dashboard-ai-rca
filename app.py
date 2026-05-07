@@ -305,16 +305,16 @@ correlation_chart_type = st.sidebar.selectbox(
     ["Scatter", "Line", "Bar"]
 )
 # =========================================================
-# 🚀 TOP FILTER BAR (MAIN CONTROL)
+# 📊 DETECT NUMERIC COLUMNS
 # =========================================================
+numeric_cols = df.select_dtypes(include=['int64', 'float64']).columns.tolist()
 
+# =========================================================
+# 🚀 TOP FILTER BAR (MAIN CONTROL - SOURCE OF TRUTH)
+# =========================================================
 st.markdown("### 🔎 Quick Filters")
 
-top1, top2, top3, top4 = st.columns([2,2,2,2])
-
-# Detect columns
-numeric_cols = df.select_dtypes(include=['int64','float64']).columns.tolist()
-all_cols = df.columns.tolist()
+top1, top2, top3 = st.columns([2, 2, 2])
 
 with top1:
     kpi1 = st.selectbox(
@@ -333,130 +333,99 @@ with top2:
 
 with top3:
     chart_type = st.selectbox(
-        "Chart Type",
-        ["Line", "Bar", "Area"],
+        "Trend Chart Type",
+        ["Line", "Area", "Bar", "Scatter"],
         key="top_chart"
     )
 
-with top4:
-    if "date" in [c.lower() for c in df.columns]:
-        date_col = [c for c in df.columns if "date" in c.lower()][0]
+# =========================================================
+# 🎛️ SIDEBAR (SECONDARY CONTROLS ONLY)
+# =========================================================
+st.sidebar.markdown("## ⚙️ Chart Controls")
 
-        df[date_col] = pd.to_datetime(df[date_col], errors='coerce')
+smooth = st.sidebar.slider(
+    "Smoothing Level",
+    min_value=1,
+    max_value=20,
+    value=5
+)
 
-        date_range = st.date_input(
-            "Date Range",
-            [df[date_col].min(), df[date_col].max()],
-            key="top_date"
-        )
+dist_chart_type = st.sidebar.selectbox(
+    "Distribution Chart",
+    ["Histogram", "Violin"]
+)
 
-        if len(date_range) == 2:
-            df = df[
-                (df[date_col] >= pd.to_datetime(date_range[0])) &
-                (df[date_col] <= pd.to_datetime(date_range[1]))
-            ]
-# =========================
-# KPI OVERVIEW
-# =========================
-st.markdown("### 📊 KPI Overview")
+extra_chart_type = st.sidebar.selectbox(
+    "Extra Chart",
+    ["Histogram", "Box"]
+)
 
-kpi_series = df[kpi1].dropna()
+corr_chart_type = st.sidebar.selectbox(
+    "Relationship Chart",
+    ["Scatter", "Line", "Bar"]
+)
 
-c1, c2, c3, c4 = st.columns(4)
-c1.metric("Avg", round(kpi_series.mean(), 2))
-c2.metric("Max", round(kpi_series.max(), 2))
-c3.metric("Min", round(kpi_series.min(), 2))
-c4.metric("Count", len(kpi_series))
+# =========================================================
+# 📈 TREND CHART (USES TOP BAR ONLY)
+# =========================================================
+st.markdown("### 📈 Trend Analysis")
 
-# =========================
-# MAIN CHARTS
-# =========================
-colA, colB = st.columns(2)
+df["smooth"] = df[kpi1].rolling(window=smooth).mean()
 
-# =========================
-# TREND ANALYSIS
-# =========================
-with colA:
-    st.markdown("### 📈 Trend Analysis")
+if chart_type == "Line":
+    fig1 = px.line(df, y=kpi1)
 
-    chart_df = df.copy()
-    x_axis = np.arange(len(chart_df))
+elif chart_type == "Area":
+    fig1 = px.area(df, y=kpi1)
 
-    chart_df[kpi1] = chart_df[kpi1].rolling(window=smooth, min_periods=1).mean()
+elif chart_type == "Bar":
+    fig1 = px.bar(df, y=kpi1)
 
-    if kpi2 != "None":
-        chart_df[kpi2] = chart_df[kpi2].rolling(window=smooth, min_periods=1).mean()
+else:
+    fig1 = px.scatter(df, y=kpi1)
 
-    fig1 = go.Figure()
-
-    if trend_chart_type == "Line":
-        fig1.add_trace(go.Scatter(
-            x=x_axis,
-            y=chart_df[kpi1],
-            mode="lines",
-            name=kpi1,
-            line=dict(color="#00eaff", width=3)
-        ))
-
-    elif trend_chart_type == "Area":
-        fig1.add_trace(go.Scatter(
-            x=x_axis,
-            y=chart_df[kpi1],
-            mode="lines",
-            fill="tozeroy",
-            name=kpi1,
-            line=dict(color="#00eaff", width=3)
-        ))
-
-    elif trend_chart_type == "Bar":
-        fig1.add_trace(go.Bar(
-            x=x_axis,
-            y=chart_df[kpi1],
-            name=kpi1,
-            marker_color="#00eaff"
-        ))
-
-    else:
-        fig1.add_trace(go.Scatter(
-            x=x_axis,
-            y=chart_df[kpi1],
-            mode="markers",
-            name=kpi1,
-            marker=dict(color="#00eaff", size=5)
-        ))
-
-    if kpi2 != "None":
-        fig1.add_trace(go.Scatter(
-            x=x_axis,
-            y=chart_df[kpi2],
+# Secondary KPI overlay
+if kpi2 != "None":
+    fig1.add_trace(
+        go.Scatter(
+            y=df[kpi2],
             mode="lines",
             name=kpi2,
-            yaxis="y2",
-            line=dict(color="#ff2da3", width=3, dash="dot")
-        ))
-
-    trend_title = f"{kpi1} vs {kpi2}" if kpi2 != "None" else f"{kpi1} Trend"
-
-    fig1 = apply_chart_style(
-        fig1,
-        x_title="Index",
-        y_title=kpi1,
-        title_text=trend_title,
-        bottom_legend=True
+            yaxis="y2"
+        )
     )
 
-    if kpi2 != "None":
-        fig1.update_layout(
-            yaxis2=dict(
-                overlaying="y",
-                side="right",
-                showgrid=False,
-                title=dict(text=kpi2, font=dict(size=14, color="#ffffff")),
-                tickfont=dict(color="#cbd5f5")
-            )
-        )
+# =========================================================
+# 🎨 STYLE (YOUR DARK THEME)
+# =========================================================
+fig1.update_layout(
+    title=dict(
+        text=f"{kpi1} vs {kpi2}" if kpi2 != "None" else f"{kpi1} Trend",
+        x=0.5,
+        y=0.92,
+        xanchor="center",
+        yanchor="top",
+        font=dict(size=20, color="#ffffff")
+    ),
+    template="plotly_dark",
+    plot_bgcolor="#020617",
+    paper_bgcolor="#020617",
+    xaxis=dict(showgrid=False),
+    yaxis=dict(showgrid=False),
+    legend=dict(
+        orientation="h",
+        x=0.5,
+        y=-0.2,
+        xanchor="center",
+        yanchor="top",
+        font=dict(color="#e2e8f0", size=12),
+        bgcolor="rgba(0,0,0,0)"
+    ),
+    margin=dict(l=40, r=40, t=80, b=80),
+    yaxis2=dict(overlaying="y", side="right") if kpi2 != "None" else None
+)
 
-    st.plotly_chart(fig1, use_container_width=True, key="trend_chart")
+st.plotly_chart(fig1, use_container_width=True)
 
 # =========================
 # DISTRIBUTION
