@@ -16,134 +16,121 @@ st.markdown("""
 <style>
 
 /* =========================================================
-   🌑 GLOBAL APP BACKGROUND
+   🌑 GLOBAL BACKGROUND (DEEP BLACK)
 ========================================================= */
-html, body, .stApp, .main, .block-container {
+html, body, .stApp {
     background-color: #000000 !important;
-    color: #f8fafc !important;
+    color: #ffffff !important;
 }
 
 /* =========================================================
-   📦 MAIN CARDS / SECTIONS
+   📦 MAIN CARDS (CLEAR SEPARATION)
 ========================================================= */
+.block-container {
+    padding-top: 1rem !important;
+}
+
 .element-container {
     background: #050505 !important;
-    border: 1px solid rgba(0, 234, 255, 0.14) !important;
-    border-radius: 16px !important;
-    padding: 14px !important;
+    border: 1px solid rgba(0, 255, 255, 0.18) !important;
+    border-radius: 14px !important;
+    padding: 16px !important;
     margin-bottom: 14px !important;
 }
 
 /* =========================================================
-   🎛️ SIDEBAR / CONTROL PANEL - FULL BLACK
+   🎛️ SIDEBAR (STRONG + READABLE)
 ========================================================= */
 section[data-testid="stSidebar"] {
     background: #000000 !important;
-    border-right: 1px solid rgba(0, 234, 255, 0.25) !important;
-    padding: 20px 12px !important;
+    border-right: 1px solid rgba(0,255,255,0.25) !important;
 }
 
-/* Sidebar all text */
-section[data-testid="stSidebar"] * {
+/* Sidebar titles */
+section[data-testid="stSidebar"] h1,
+section[data-testid="stSidebar"] h2,
+section[data-testid="stSidebar"] h3 {
     color: #ffffff !important;
-    font-weight: 600 !important;
+    font-size: 18px !important;
+    font-weight: 800 !important;
 }
 
 /* Sidebar labels */
-section[data-testid="stSidebar"] label,
-section[data-testid="stSidebar"] p,
-section[data-testid="stSidebar"] span {
-    color: #f8fafc !important;
-    font-size: 13px !important;
+section[data-testid="stSidebar"] label {
+    color: #ffffff !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
 }
 
-/* =========================================================
-   🔲 SIDEBAR CONTROL BOXES
-========================================================= */
+/* Sidebar boxes */
 section[data-testid="stSidebar"] .stSelectbox,
 section[data-testid="stSidebar"] .stSlider,
 section[data-testid="stSidebar"] .stFileUploader {
     background: #050505 !important;
-    border: 1px solid rgba(0, 234, 255, 0.28) !important;
-    border-radius: 14px !important;
-    padding: 12px !important;
-    margin-bottom: 18px !important;
+    border: 1px solid rgba(0,255,255,0.25) !important;
+    border-radius: 10px !important;
+    padding: 10px !important;
+    margin-bottom: 16px !important;
 }
 
-/* =========================================================
-   ⬇️ DROPDOWNS / INPUTS
-========================================================= */
-section[data-testid="stSidebar"] div[data-baseweb="select"],
+/* Inputs */
 section[data-testid="stSidebar"] input,
 section[data-testid="stSidebar"] textarea,
-section[data-testid="stSidebar"] select {
-    background-color: #020202 !important;
+section[data-testid="stSidebar"] select,
+section[data-testid="stSidebar"] div[data-baseweb="select"] {
+    background: #000000 !important;
     color: #ffffff !important;
-    border: 1px solid rgba(0, 234, 255, 0.35) !important;
-    border-radius: 10px !important;
-}
-
-/* Dropdown selected text */
-section[data-testid="stSidebar"] div[data-baseweb="select"] * {
-    color: #ffffff !important;
-}
-
-/* Dropdown arrow/icon */
-section[data-testid="stSidebar"] svg {
-    color: #00eaff !important;
-    fill: #00eaff !important;
+    border: 1px solid rgba(0,255,255,0.35) !important;
 }
 
 /* =========================================================
-   📂 FILE UPLOADER
-========================================================= */
-section[data-testid="stSidebar"] [data-testid="stFileUploaderDropzone"] {
-    background-color: #020202 !important;
-    border: 1px dashed rgba(0, 234, 255, 0.35) !important;
-    border-radius: 12px !important;
-}
-
-section[data-testid="stSidebar"] [data-testid="stFileUploaderDropzone"] * {
-    color: #ffffff !important;
-}
-
-/* =========================================================
-   📏 SLIDER
-========================================================= */
-section[data-testid="stSidebar"] .stSlider {
-    color: #ffffff !important;
-}
-
-section[data-testid="stSidebar"] [data-testid="stSliderThumbValue"] {
-    color: #ffffff !important;
-}
-
-/* =========================================================
-   📊 KPI METRICS
+   📊 KPI NUMBERS (BIG + BOLD)
 ========================================================= */
 [data-testid="stMetricValue"] {
     color: #ffffff !important;
-    font-size: 30px !important;
+    font-size: 34px !important;
     font-weight: 900 !important;
 }
 
 [data-testid="stMetricLabel"] {
     color: #cbd5e1 !important;
-    font-size: 13px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
 }
 
 /* =========================================================
-   📈 PLOTLY BACKGROUND
+   📈 PLOTLY FIXES (THIS IS THE KEY 🔥)
 ========================================================= */
-.js-plotly-plot .plotly {
-    background: transparent !important;
+.js-plotly-plot .plotly text {
+    fill: #ffffff !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+}
+
+/* Axis titles */
+.js-plotly-plot .plotly .xtitle,
+.js-plotly-plot .plotly .ytitle {
+    font-size: 16px !important;
+    font-weight: 700 !important;
+}
+
+/* Chart titles */
+.js-plotly-plot .plotly .gtitle {
+    font-size: 20px !important;
+    font-weight: 800 !important;
+}
+
+/* Legend */
+.js-plotly-plot .plotly .legend text {
+    font-size: 14px !important;
+    font-weight: 700 !important;
 }
 
 /* =========================================================
    ✨ HOVER EFFECT
 ========================================================= */
 .element-container:hover {
-    border: 1px solid rgba(0, 234, 255, 0.45) !important;
+    border: 1px solid rgba(0,255,255,0.4) !important;
     transition: 0.2s ease-in-out;
 }
 
