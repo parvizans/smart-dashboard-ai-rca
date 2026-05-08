@@ -4,18 +4,13 @@ import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 
-# =========================
-# PAGE CONFIG
-# =========================
 st.set_page_config(layout="wide", page_title="Smart Telecom Dashboard")
 
 # =========================
-# STYLE - FINAL READABLE VERSION
+# STYLE - GOLDEN CLEAN
 # =========================
 st.markdown("""
 <style>
-
-/* GLOBAL */
 html, body, .stApp {
     background-color: #050505 !important;
     color: #ffffff !important;
@@ -27,7 +22,6 @@ html, body, .stApp {
     padding-right: 2rem !important;
 }
 
-/* CARDS */
 .element-container {
     background: #0b0f14 !important;
     border: 1px solid rgba(0,234,255,0.25) !important;
@@ -36,7 +30,6 @@ html, body, .stApp {
     margin-bottom: 16px !important;
 }
 
-/* SIDEBAR */
 section[data-testid="stSidebar"] {
     background: #050505 !important;
     border-right: 1px solid rgba(0,234,255,0.35) !important;
@@ -47,21 +40,19 @@ section[data-testid="stSidebar"] p,
 section[data-testid="stSidebar"] span {
     color: #ffffff !important;
     font-size: 15px !important;
-    font-weight: 800 !important;
+    font-weight: 700 !important;
 }
 
-/* SIDEBAR CONTROL BOXES */
 section[data-testid="stSidebar"] .stSelectbox,
 section[data-testid="stSidebar"] .stSlider,
 section[data-testid="stSidebar"] .stFileUploader {
     background: #0b0f14 !important;
-    border: 1px solid rgba(0,234,255,0.4) !important;
+    border: 1px solid rgba(0,234,255,0.35) !important;
     border-radius: 12px !important;
     padding: 12px !important;
     margin-bottom: 18px !important;
 }
 
-/* DROPDOWN INPUT FIELD */
 section[data-testid="stSidebar"] div[data-baseweb="select"] {
     background-color: #ffffff !important;
     border-radius: 8px !important;
@@ -72,7 +63,6 @@ section[data-testid="stSidebar"] div[data-baseweb="select"] * {
     font-weight: 700 !important;
 }
 
-/* FILE UPLOADER */
 section[data-testid="stSidebar"] [data-testid="stFileUploaderDropzone"] {
     background-color: #ffffff !important;
     border: 1px dashed rgba(0,234,255,0.45) !important;
@@ -84,18 +74,6 @@ section[data-testid="stSidebar"] [data-testid="stFileUploaderDropzone"] * {
     font-weight: 700 !important;
 }
 
-section[data-testid="stSidebar"] [data-testid="stFileUploaderFile"] {
-    background-color: #ffffff !important;
-    color: #000000 !important;
-    border-radius: 8px !important;
-}
-
-section[data-testid="stSidebar"] [data-testid="stFileUploaderFile"] * {
-    color: #000000 !important;
-    font-weight: 700 !important;
-}
-
-/* KPI */
 [data-testid="stMetricValue"] {
     color: #ffffff !important;
     font-size: 36px !important;
@@ -108,30 +86,37 @@ section[data-testid="stSidebar"] [data-testid="stFileUploaderFile"] * {
     font-weight: 700 !important;
 }
 
-/* PLOTLY TEXT */
+h1 {
+    font-size: 42px !important;
+    font-weight: 900 !important;
+}
+
+h2, h3 {
+    color: #ffffff !important;
+    font-weight: 850 !important;
+}
+
 .js-plotly-plot .plotly text {
     fill: #ffffff !important;
     font-size: 14px !important;
     font-weight: 600 !important;
 }
 
-/* PLOTLY HOVER FIX */
-.js-plotly-plot .hoverlayer .hovertext text {
-    fill: #000000 !important;
-    font-weight: 800 !important;
-}
-
-.js-plotly-plot .hoverlayer path {
-    fill: #ffffff !important;
-    stroke: #00eaff !important;
-    stroke-width: 1.5px !important;
-}
-
-/* PLOTLY BACKGROUND */
 .js-plotly-plot .plotly {
     background: transparent !important;
 }
 
+/* Hover tooltip readable + dark */
+.js-plotly-plot .hoverlayer .hovertext text {
+    fill: #ffffff !important;
+    font-weight: 800 !important;
+}
+
+.js-plotly-plot .hoverlayer path {
+    fill: #0b1220 !important;
+    stroke: #00eaff !important;
+    stroke-width: 1.5px !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -150,18 +135,17 @@ def clean_columns(dataframe):
 
 
 def style_fig(fig, title, x_title="", y_title="", legend_bottom=False):
-    layout = dict(
+    fig.update_layout(
         template="plotly_dark",
         plot_bgcolor="#060b16",
         paper_bgcolor="#060b16",
         font=dict(color="#ffffff"),
-
         title=dict(
             text=title,
             x=0.5,
+            xanchor="center",
             font=dict(size=20, color="#ffffff")
         ),
-
         xaxis=dict(
             title=dict(text=x_title, font=dict(size=15, color="#ffffff")),
             tickfont=dict(color="#cbd5e1"),
@@ -175,7 +159,6 @@ def style_fig(fig, title, x_title="", y_title="", legend_bottom=False):
             spikecolor="#00eaff",
             spikethickness=1
         ),
-
         yaxis=dict(
             title=dict(text=y_title, font=dict(size=15, color="#ffffff")),
             tickfont=dict(color="#cbd5e1"),
@@ -190,32 +173,29 @@ def style_fig(fig, title, x_title="", y_title="", legend_bottom=False):
             spikecolor="#00eaff",
             spikethickness=1
         ),
-
         hovermode="x unified",
-
+        hoverlabel=dict(
+            bgcolor="#0b1220",
+            bordercolor="#00eaff",
+            font=dict(color="#ffffff", size=13)
+        ),
         margin=dict(l=50, r=50, t=80, b=85)
     )
 
     if legend_bottom:
-        layout["legend"] = dict(
-            orientation="h",
-            x=0.5,
-            y=-0.22,
-            xanchor="center",
-            yanchor="top",
-            font=dict(size=13, color="#ffffff")
+        fig.update_layout(
+            legend=dict(
+                orientation="h",
+                x=0.5,
+                y=-0.22,
+                xanchor="center",
+                yanchor="top",
+                font=dict(size=13, color="#ffffff")
+            )
         )
 
-    fig.update_layout(
-        hoverlabel=dict(
-            bgcolor="#ffffff",
-            bordercolor="#00eaff",
-            font=dict(
-                color="#000000",
-                size=13
-            )
-        ),
-        hovermode="x unified"
+    fig.update_traces(
+        hovertemplate="<b>%{fullData.name}</b><br>X: %{x}<br>Y: %{y:.2f}<extra></extra>"
     )
 
     return fig
@@ -234,7 +214,6 @@ st.markdown(
 # SIDEBAR
 # =========================
 st.sidebar.header("🎛️ Control Panel")
-
 uploaded_file = st.sidebar.file_uploader("Upload CSV", type=["csv"])
 
 if uploaded_file is None:
@@ -455,12 +434,7 @@ with colD:
 # DATA TABLE - TRUST LAYER
 # =========================
 st.markdown("### 📋 Data Preview")
-
-st.dataframe(
-    filtered_df.head(100),
-    use_container_width=True,
-    height=350
-)
+st.dataframe(filtered_df.head(100), use_container_width=True, height=350)
 
 # =========================
 # KPI HEALTH
