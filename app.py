@@ -117,6 +117,14 @@ h2, h3 {
     stroke: #00eaff !important;
     stroke-width: 1.5px !important;
 }
+
+/* TOP FILTER LABELS */
+.stSelectbox label,
+.stMultiSelect label {
+    color: #ffffff !important;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
